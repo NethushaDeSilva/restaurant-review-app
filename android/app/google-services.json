@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "463159231354",
+    "firebase_url": "https://colombo-eats-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "colombo-eats",
+    "storage_bucket": "colombo-eats.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:463159231354:android:33237091c25433b4ab4cc3",
+        "android_client_info": {
+          "package_name": "com.example.restaurant_review_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZtahStswvc8frUJA6VjqS3FVTPWz1q7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

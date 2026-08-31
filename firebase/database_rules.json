@@ -1,0 +1,55 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "restaurants": {
+      ".read": "auth != null",
+
+      "$restaurantId": {
+        ".write": "auth != null && (!data.exists() ? newData.child('ownerId').val() === auth.uid : data.child('ownerId').val() === auth.uid)",
+
+        ".validate": "newData.hasChildren(['ownerId', 'name', 'cuisine', 'area', 'description', 'imageUrl', 'latitude', 'longitude'])",
+
+        "ownerId": {
+          ".validate": "newData.val() === auth.uid"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 80"
+        },
+        "description": {
+          ".validate": "newData.isString() && newData.val().length >= 20 && newData.val().length <= 400"
+        },
+        "rating": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5"
+        },
+        "latitude": {
+          ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+        },
+        "longitude": {
+          ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+        }
+      }
+    },
+
+    "reviews": {
+      ".read": "auth != null",
+
+      "$reviewId": {
+        ".write": "auth != null && (!data.exists() ? (newData.child('userId').val() === auth.uid && root.child('restaurants').child(newData.child('restaurantId').val()).child('ownerId').val() !== auth.uid) : data.child('userId').val() === auth.uid)",
+
+        ".validate": "newData.hasChildren(['restaurantId', 'userId', 'authorName', 'rating', 'comment', 'visitType', 'visitDate'])",
+
+        "rating": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 5"
+        },
+        "comment": {
+          ".validate": "newData.isString() && newData.val().length >= 10 && newData.val().length <= 400"
+        },
+        "userId": {
+          ".validate": "newData.val() === auth.uid"
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Needed to download restaurant photos and reach Firebase. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Needed by the "sort by distance from me" feature. Coarse location is
+         listed as well so the app still works if the user chooses the
+         approximate option in the Android permission dialog. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
-        android:label="restaurant_review_app"
+        android:label="Colombo Eats"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
