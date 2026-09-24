@@ -8,16 +8,24 @@ import 'restaurant_image.dart';
 /// Used by the single-column list layout (phone portrait) and the Home
 /// screen. [distanceKm] is only supplied once the user has asked for
 /// nearby restaurants and the GPS has returned a position.
+///
+/// The rating shown is [averageRating] and [reviewCount], computed live from
+/// the reviews stream by ratingsByRestaurant — never restaurant.rating,
+/// which is frozen at whatever value the listing was created with.
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
   final VoidCallback onTap;
+  final int reviewCount;
   final double? distanceKm;
+  final double? averageRating;
 
   const RestaurantCard({
     super.key,
     required this.restaurant,
     required this.onTap,
+    required this.reviewCount,
     this.distanceKm,
+    this.averageRating,
   });
 
   @override
@@ -90,13 +98,13 @@ class RestaurantCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // A newly added listing has no rating until customers
-                      // review it, so it shows a "New" chip instead of 0.0.
-                      if (restaurant.rating > 0) ...[
+                      // A restaurant with no reviews yet has no entry in the
+                      // live ratings map, so it shows a "New" chip instead.
+                      if (reviewCount > 0) ...[
                         Icon(Icons.star, size: 18, color: colours.primary),
                         const SizedBox(width: 2),
                         Text(
-                          restaurant.rating.toStringAsFixed(1),
+                          '${averageRating!.toStringAsFixed(1)} ($reviewCount)',
                           style: text.titleSmall,
                         ),
                       ] else
@@ -148,13 +156,17 @@ class RestaurantCard extends StatelessWidget {
 class RestaurantGridCard extends StatelessWidget {
   final Restaurant restaurant;
   final VoidCallback onTap;
+  final int reviewCount;
   final double? distanceKm;
+  final double? averageRating;
 
   const RestaurantGridCard({
     super.key,
     required this.restaurant,
     required this.onTap,
+    required this.reviewCount,
     this.distanceKm,
+    this.averageRating,
   });
 
   @override
@@ -226,11 +238,11 @@ class RestaurantGridCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      if (restaurant.rating > 0) ...[
+                      if (reviewCount > 0) ...[
                         Icon(Icons.star, size: 14, color: colours.primary),
                         const SizedBox(width: 2),
                         Text(
-                          restaurant.rating.toStringAsFixed(1),
+                          '${averageRating!.toStringAsFixed(1)} ($reviewCount)',
                           style: text.labelMedium,
                         ),
                       ] else

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../models/restaurant.dart';
+import '../models/review.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
+import '../utils/ratings.dart';
 import '../widgets/restaurant_image.dart';
 import 'add_restaurant_screen.dart';
 import 'restaurant_detail_screen.dart';
@@ -162,85 +164,118 @@ class MyRestaurantsScreen extends StatelessWidget {
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 88),
-            itemCount: mine.length,
-            itemBuilder: (BuildContext context, int index) {
-              final Restaurant restaurant = mine[index];
+          // The rating shown for each of my restaurants is computed live
+          // from every review, not read from restaurant.rating, so this
+          // needs its own stream nested inside the restaurants one.
+          return StreamBuilder<List<Review>>(
+            stream: DatabaseService.reviewsStream(),
+            builder: (context, reviewSnapshot) {
+              if (reviewSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-              return Card(
-                clipBehavior: Clip.antiAlias,
-                margin: const EdgeInsets.only(bottom: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () => _view(context, restaurant),
-                      child: RestaurantImage(
-                        imageUrl: restaurant.imageUrl,
-                        height: 130,
-                      ),
+              if (reviewSnapshot.hasError) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Text(
+                      'Could not load ratings.',
+                      style: text.bodyMedium,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            restaurant.name,
-                            style: text.titleMedium,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                  ),
+                );
+              }
+
+              final Map<String, ({double average, int count})> ratings =
+                  ratingsByRestaurant(reviewSnapshot.data ?? []);
+
+              return ListView.builder(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 88),
+                itemCount: mine.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final Restaurant restaurant = mine[index];
+                  final ({double average, int count})? stats =
+                      ratings[restaurant.id];
+
+                  return Card(
+                    clipBehavior: Clip.antiAlias,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InkWell(
+                          onTap: () => _view(context, restaurant),
+                          child: RestaurantImage(
+                            imageUrl: restaurant.imageUrl,
+                            height: 130,
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '${restaurant.cuisine}  ·  ${restaurant.area}',
-                            style: text.bodySmall?.copyWith(
-                              color: colours.onSurfaceVariant,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (restaurant.rating > 0) ...[
-                                Icon(
-                                  Icons.star,
-                                  size: 16,
-                                  color: colours.primary,
-                                ),
-                                const SizedBox(width: 2),
-                                Text(
-                                  restaurant.rating.toStringAsFixed(1),
-                                  style: text.labelLarge,
-                                ),
-                              ] else
-                                Text(
-                                  'No ratings yet',
-                                  style: text.labelMedium?.copyWith(
-                                    color: colours.onSurfaceVariant,
-                                  ),
-                                ),
-                              const Spacer(),
-                              IconButton(
-                                icon: const Icon(Icons.edit_outlined),
-                                tooltip: 'Edit',
-                                onPressed: () => _edit(context, restaurant),
+                              Text(
+                                restaurant.name,
+                                style: text.titleMedium,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.delete_outline),
-                                tooltip: 'Delete',
-                                onPressed: () =>
-                                    _confirmDelete(context, restaurant),
+                              const SizedBox(height: 2),
+                              Text(
+                                '${restaurant.cuisine}  ·  ${restaurant.area}',
+                                style: text.bodySmall?.copyWith(
+                                  color: colours.onSurfaceVariant,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  // A restaurant with no reviews yet has no
+                                  // entry in the live ratings map.
+                                  if (stats != null) ...[
+                                    Icon(
+                                      Icons.star,
+                                      size: 16,
+                                      color: colours.primary,
+                                    ),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      '${stats.average.toStringAsFixed(1)} '
+                                      '(${stats.count})',
+                                      style: text.labelLarge,
+                                    ),
+                                  ] else
+                                    Text(
+                                      'No ratings yet',
+                                      style: text.labelMedium?.copyWith(
+                                        color: colours.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  const Spacer(),
+                                  IconButton(
+                                    icon: const Icon(Icons.edit_outlined),
+                                    tooltip: 'Edit',
+                                    onPressed: () =>
+                                        _edit(context, restaurant),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete_outline),
+                                    tooltip: 'Delete',
+                                    onPressed: () =>
+                                        _confirmDelete(context, restaurant),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               );
             },
           );

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../models/restaurant.dart';
+import '../models/review.dart';
 import '../services/database_service.dart';
 import '../services/location_service.dart';
+import '../utils/ratings.dart';
 import '../widgets/restaurant_card.dart';
 import 'restaurant_detail_screen.dart';
 
@@ -87,10 +89,19 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
   }
 
   /// Applies the rating filter, then sorts by distance if we have a position.
-  List<Restaurant> _applyFilters(List<Restaurant> all) {
+  ///
+  /// The filter runs against the live average computed from reviews, not
+  /// restaurant.rating. A restaurant with no reviews has no entry in
+  /// [ratings], and is treated as a 0.0 here so "Any" still shows it but any
+  /// higher minimum hides it, matching how the slider behaved before.
+  List<Restaurant> _applyFilters(
+    List<Restaurant> all,
+    Map<String, ({double average, int count})> ratings,
+  ) {
     final List<Restaurant> matches = [];
     for (final Restaurant restaurant in all) {
-      if (restaurant.rating >= _minRating) {
+      final double average = ratings[restaurant.id]?.average ?? 0;
+      if (average >= _minRating) {
         matches.add(restaurant);
       }
     }
@@ -241,7 +252,10 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     );
   }
 
-  Widget _buildList(List<Restaurant> visible) {
+  Widget _buildList(
+    List<Restaurant> visible,
+    Map<String, ({double average, int count})> ratings,
+  ) {
     return OrientationBuilder(
       builder: (context, orientation) {
         final int columns = _columnCount(orientation);
@@ -255,6 +269,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
               final Restaurant restaurant = visible[index];
               return RestaurantCard(
                 restaurant: restaurant,
+                reviewCount: ratings[restaurant.id]?.count ?? 0,
+                averageRating: ratings[restaurant.id]?.average,
                 distanceKm: _distanceTo(restaurant),
                 onTap: () => _openDetail(restaurant),
               );
@@ -276,6 +292,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
             final Restaurant restaurant = visible[index];
             return RestaurantGridCard(
               restaurant: restaurant,
+              reviewCount: ratings[restaurant.id]?.count ?? 0,
+              averageRating: ratings[restaurant.id]?.average,
               distanceKm: _distanceTo(restaurant),
               onTap: () => _openDetail(restaurant),
             );
@@ -340,22 +358,44 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
             );
           }
 
-          final List<Restaurant> visible = _applyFilters(all);
+          // The rating filter and every card's rating run off the live
+          // average computed from reviews, so a second stream is nested here
+          // rather than reading restaurant.rating.
+          return StreamBuilder<List<Review>>(
+            stream: DatabaseService.reviewsStream(),
+            builder: (context, reviewSnapshot) {
+              if (reviewSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          return Column(
-            children: [
-              _buildFilterPanel(all.length, visible.length),
-              _buildLocationBar(),
-              Expanded(
-                child: visible.isEmpty
-                    ? _buildMessage(
-                        Icons.search_off,
-                        'No restaurants match',
-                        'Lower the minimum rating to see more results.',
-                      )
-                    : _buildList(visible),
-              ),
-            ],
+              if (reviewSnapshot.hasError) {
+                return _buildMessage(
+                  Icons.cloud_off,
+                  'Could not load ratings',
+                  'Check your internet connection and try again.',
+                );
+              }
+
+              final Map<String, ({double average, int count})> ratings =
+                  ratingsByRestaurant(reviewSnapshot.data ?? []);
+              final List<Restaurant> visible = _applyFilters(all, ratings);
+
+              return Column(
+                children: [
+                  _buildFilterPanel(all.length, visible.length),
+                  _buildLocationBar(),
+                  Expanded(
+                    child: visible.isEmpty
+                        ? _buildMessage(
+                            Icons.search_off,
+                            'No restaurants match',
+                            'Lower the minimum rating to see more results.',
+                          )
+                        : _buildList(visible, ratings),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),

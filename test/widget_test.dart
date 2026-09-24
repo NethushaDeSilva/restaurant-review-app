@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:restaurant_review_app/models/restaurant.dart';
 import 'package:restaurant_review_app/models/review.dart';
+import 'package:restaurant_review_app/utils/ratings.dart';
 
 void main() {
   group('Restaurant.fromMap', () {
@@ -125,6 +126,62 @@ void main() {
       });
 
       expect(review.authorName, 'Unknown');
+    });
+  });
+
+  group('ratingsByRestaurant', () {
+    Review review(String restaurantId, double rating) {
+      return Review(
+        id: '',
+        restaurantId: restaurantId,
+        userId: 'user-1',
+        authorName: 'Reviewer',
+        rating: rating,
+        comment: 'Placeholder comment for the test review.',
+        visitType: 'Dinner',
+        visitDate: '1 Jan 2026',
+      );
+    }
+
+    test('an empty review list produces an empty map', () {
+      expect(ratingsByRestaurant([]), isEmpty);
+    });
+
+    test('a single review sets the average to its own rating', () {
+      final Map<String, ({double average, int count})> ratings =
+          ratingsByRestaurant([review('r1', 4.0)]);
+
+      expect(ratings['r1']?.average, 4.0);
+      expect(ratings['r1']?.count, 1);
+    });
+
+    test('groups reviews by restaurant and averages each separately', () {
+      final Map<String, ({double average, int count})> ratings =
+          ratingsByRestaurant([
+            review('r1', 5.0),
+            review('r1', 3.0),
+            review('r2', 2.0),
+          ]);
+
+      expect(ratings['r1']?.average, 4.0);
+      expect(ratings['r1']?.count, 2);
+      expect(ratings['r2']?.average, 2.0);
+      expect(ratings['r2']?.count, 1);
+    });
+
+    test('a restaurant with no reviews has no entry in the map', () {
+      final Map<String, ({double average, int count})> ratings =
+          ratingsByRestaurant([review('r1', 4.0)]);
+
+      expect(ratings.containsKey('r2'), false);
+    });
+
+    test('rounds the average to one decimal place', () {
+      // 4.0 + 4.0 + 5.0 = 13.0, / 3 = 4.333... which should round to 4.3.
+      final Map<String, ({double average, int count})> ratings =
+          ratingsByRestaurant([review('r1', 4.0), review('r1', 4.0), review('r1', 5.0)]);
+
+      expect(ratings['r1']?.average, 4.3);
     });
   });
 }

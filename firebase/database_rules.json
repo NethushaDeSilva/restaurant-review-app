@@ -21,7 +21,7 @@
           ".validate": "newData.isString() && newData.val().length >= 20 && newData.val().length <= 400"
         },
         "rating": {
-          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5"
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5 && (!data.exists() ? newData.val() === 0 : newData.val() === data.val())"
         },
         "latitude": {
           ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"

@@ -1,0 +1,1 @@
+{"database":{"rules":"firebase/database_rules.json"},"flutter":{"platforms":{"android":{"default":{"projectId":"colombo-eats","appId":"1:463159231354:android:33237091c25433b4ab4cc3","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"colombo-eats","configurations":{"android":"1:463159231354:android:33237091c25433b4ab4cc3"}}}}}}
