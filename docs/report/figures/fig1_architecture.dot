@@ -1,0 +1,24 @@
+digraph Architecture {
+  rankdir=TB;
+  bgcolor="white";
+  node [shape=box, style="filled", fillcolor="white", color="#888888", fontname="Helvetica", fontcolor="black", fontsize=12, margin="0.18,0.12"];
+  edge [color="#555555", fontname="Helvetica", fontsize=10, fontcolor="black"];
+
+  screens [label="screens/\n(11 screen widgets)"];
+  shared [label="shared_widgets/\nRestaurantCard, RestaurantImage"];
+  models [label="models/\nRestaurant, Review"];
+  utils [label="utils/\nratingsByRestaurant()"];
+  services [label="services/\nAuthService\nDatabaseService\nLocationService", fillcolor="#fdece5", color="#8f4b39"];
+  firebaseAuth [label="Firebase Authentication", shape=ellipse];
+  firebaseDb [label="Firebase Realtime Database", shape=ellipse];
+  gps [label="Android location provider", shape=ellipse];
+
+  screens -> shared;
+  screens -> services [label="calls"];
+  screens -> utils [label="uses"];
+  services -> models [label="reads/writes"];
+  utils -> models [label="reads"];
+  services -> firebaseAuth;
+  services -> firebaseDb;
+  services -> gps;
+}

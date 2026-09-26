@@ -1,0 +1,19 @@
+digraph DatabaseTree {
+  rankdir=LR;
+  bgcolor="white";
+  node [shape=box, style="filled", fillcolor="white", color="#888888", fontname="Helvetica", fontcolor="black", fontsize=11, margin="0.15,0.1"];
+  edge [color="#555555"];
+
+  root [label="/ (Firebase Realtime Database)"];
+  restaurants [label="restaurants", fillcolor="#fdece5", color="#8f4b39"];
+  r1 [label="r1\nname, cuisine, area\nrating, priceRange\nimageUrl, description\npopularDishes\nlatitude, longitude\nownerId"];
+  r2 [label="r2 .. r8\n(same shape)"];
+  reviews [label="reviews", fillcolor="#fdece5", color="#8f4b39"];
+  rev1 [label="{pushId}\nrestaurantId, userId\nauthorName, rating\ncomment, visitType\nvisitDate"];
+
+  root -> restaurants;
+  root -> reviews;
+  restaurants -> r1;
+  restaurants -> r2;
+  reviews -> rev1;
+}

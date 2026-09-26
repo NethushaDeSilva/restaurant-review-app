@@ -1,0 +1,21 @@
+digraph WritePath {
+  rankdir=TB;
+  bgcolor="white";
+  node [shape=box, style="filled", fillcolor="white", color="#888888", fontname="Helvetica", fontcolor="black", fontsize=11, margin="0.15,0.1"];
+  edge [color="#555555", fontname="Helvetica", fontsize=9, fontcolor="black"];
+
+  press [label="User taps 'Post review'\n(AddReviewScreen)"];
+  method [label="DatabaseService.addReview()", fillcolor="#fdece5", color="#8f4b39"];
+  push [label="reviews.push().set(review.toMap())"];
+  node1 [label="Firebase Realtime Database"];
+  stream [label="onValue event fires\non every open connection"];
+  s1 [label="RestaurantDetailScreen\n(rating header + review list)"];
+  s2 [label="MyReviewsScreen"];
+  s3 [label="HomeScreen\n(top-rated ranking)"];
+  s4 [label="RestaurantsScreen\n(card rating badge)"];
+  s5 [label="ProfileScreen\n(review count stat)"];
+  s6 [label="MyRestaurantsScreen\n(owner's rating display)"];
+
+  press -> method -> push -> node1 -> stream;
+  stream -> s1; stream -> s2; stream -> s3; stream -> s4; stream -> s5; stream -> s6;
+}
