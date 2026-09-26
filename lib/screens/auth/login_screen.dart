@@ -13,7 +13,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // The key gives access to the Form's validate() method.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
@@ -25,7 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    // Controllers hold memory until they are disposed of.
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -58,7 +56,6 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() => _errorMessage = 'Something went wrong. Try again.');
       }
     } finally {
-      // mounted is false if the widget was removed while we were waiting.
       if (mounted) {
         setState(() => _isLoading = false);
       }
