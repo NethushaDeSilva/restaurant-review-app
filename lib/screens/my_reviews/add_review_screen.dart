@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../models/restaurant.dart';
-import '../models/review.dart';
-import '../services/auth_service.dart';
-import '../services/database_service.dart';
+import '../../models/restaurant.dart';
+import '../../models/review.dart';
+import '../../services/auth_service.dart';
+import '../../services/database_service.dart';
 
 /// Writes a new review, or edits one the user already wrote.
 ///

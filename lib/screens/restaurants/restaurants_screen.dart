@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../models/restaurant.dart';
-import '../models/review.dart';
-import '../services/database_service.dart';
-import '../services/location_service.dart';
-import '../utils/ratings.dart';
-import '../widgets/restaurant_card.dart';
+import '../../models/restaurant.dart';
+import '../../models/review.dart';
+import '../../services/database_service.dart';
+import '../../services/location_service.dart';
+import '../../utils/ratings.dart';
+import '../../shared_widgets/restaurant_card.dart';
 import 'restaurant_detail_screen.dart';
 
 /// The "master" half of the master/detail pair.

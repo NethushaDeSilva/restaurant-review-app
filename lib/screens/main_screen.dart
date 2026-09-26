@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'home_screen.dart';
-import 'my_reviews_screen.dart';
-import 'profile_screen.dart';
-import 'restaurants_screen.dart';
+import 'home/home_screen.dart';
+import 'my_reviews/my_reviews_screen.dart';
+import 'profile/profile_screen.dart';
+import 'restaurants/restaurants_screen.dart';
 
 /// The shell that holds the app's navigation.
 ///

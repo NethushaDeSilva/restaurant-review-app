@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../models/restaurant.dart';
-import '../models/review.dart';
-import '../services/database_service.dart';
-import '../utils/ratings.dart';
-import '../widgets/restaurant_card.dart';
-import 'restaurant_detail_screen.dart';
+import '../../models/restaurant.dart';
+import '../../models/review.dart';
+import '../../services/database_service.dart';
+import '../../utils/ratings.dart';
+import '../../shared_widgets/restaurant_card.dart';
+import '../restaurants/restaurant_detail_screen.dart';
 
 /// Landing tab: the highest-rated places, so the app opens on something
 /// useful rather than an empty dashboard.

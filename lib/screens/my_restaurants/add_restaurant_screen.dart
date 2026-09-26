@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../models/restaurant.dart';
-import '../services/auth_service.dart';
-import '../services/database_service.dart';
-import '../services/location_service.dart';
+import '../../models/restaurant.dart';
+import '../../services/auth_service.dart';
+import '../../services/database_service.dart';
+import '../../services/location_service.dart';
 
 /// Adds a new restaurant, or edits one the signed-in user already owns.
 ///

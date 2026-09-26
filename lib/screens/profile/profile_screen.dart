@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../models/review.dart';
-import '../services/auth_service.dart';
-import '../services/database_service.dart';
-import 'my_restaurants_screen.dart';
+import '../../models/review.dart';
+import '../../services/auth_service.dart';
+import '../../services/database_service.dart';
+import '../my_restaurants/my_restaurants_screen.dart';
 
 /// The signed-in user's own page, with the sign-out button.
 class ProfileScreen extends StatelessWidget {

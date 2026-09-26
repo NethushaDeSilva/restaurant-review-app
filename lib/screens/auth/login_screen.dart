@@ -1,23 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../services/auth_service.dart';
+import '../../services/auth_service.dart';
+import 'register_screen.dart';
 
-/// Create-account screen, opened from the link on the login screen.
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+/// Sign-in screen. The link at the bottom opens the register screen.
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _LoginScreenState extends State<LoginScreen> {
+  // The key gives access to the Form's validate() method.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmController = TextEditingController();
 
   bool _isLoading = false;
   bool _obscurePassword = true;
@@ -25,14 +25,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
+    // Controllers hold memory until they are disposed of.
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmController.dispose();
     super.dispose();
   }
 
-  Future<void> _register() async {
+  Future<void> _signIn() async {
+    // validate() runs every validator below and returns false if any failed.
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -43,16 +43,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      await AuthService.register(
-        _nameController.text.trim(),
+      await AuthService.signIn(
         _emailController.text.trim(),
         _passwordController.text,
       );
-      // Registering signs the user in automatically, so main.dart swaps to
-      // the app. Popping this screen keeps the back stack tidy.
-      if (mounted) {
-        Navigator.pop(context);
-      }
+      // No navigation here. main.dart is listening to authChanges() and
+      // swaps this screen for the app as soon as sign-in succeeds.
     } on FirebaseAuthException catch (error) {
       if (mounted) {
         setState(() => _errorMessage = AuthService.messageFor(error));
@@ -62,20 +58,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() => _errorMessage = 'Something went wrong. Try again.');
       }
     } finally {
+      // mounted is false if the widget was removed while we were waiting.
       if (mounted) {
         setState(() => _isLoading = false);
       }
     }
-  }
-
-  String? _validateName(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Enter your name';
-    }
-    if (value.trim().length < 2) {
-      return 'Name is too short';
-    }
-    return null;
   }
 
   String? _validateEmail(String? value) {
@@ -91,20 +78,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Choose a password';
+      return 'Enter your password';
     }
     if (value.length < 6) {
       return 'Password must be at least 6 characters';
-    }
-    return null;
-  }
-
-  String? _validateConfirm(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Re-enter your password';
-    }
-    if (value != _passwordController.text) {
-      return 'Passwords do not match';
     }
     return null;
   }
@@ -115,7 +92,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final ColorScheme colours = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create account')),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -127,28 +103,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('Join Colombo Eats', style: text.headlineSmall),
+                    Icon(
+                      Icons.restaurant_menu,
+                      size: 64,
+                      color: colours.primary,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Colombo Eats',
+                      textAlign: TextAlign.center,
+                      style: text.headlineMedium,
+                    ),
                     const SizedBox(height: 4),
                     Text(
-                      'Your name appears on the reviews you write',
+                      'Sign in to read and write reviews',
+                      textAlign: TextAlign.center,
                       style: text.bodyMedium?.copyWith(
                         color: colours.onSurfaceVariant,
                       ),
                     ),
-                    const SizedBox(height: 24),
-
-                    TextFormField(
-                      controller: _nameController,
-                      textCapitalization: TextCapitalization.words,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Full name',
-                        prefixIcon: Icon(Icons.person_outline),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: _validateName,
-                    ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 32),
 
                     TextFormField(
                       controller: _emailController,
@@ -166,10 +140,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
-                      textInputAction: TextInputAction.next,
+                      textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        helperText: 'At least 6 characters',
                         prefixIcon: const Icon(Icons.lock_outline),
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
@@ -187,20 +160,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       validator: _validatePassword,
                     ),
-                    const SizedBox(height: 16),
 
-                    TextFormField(
-                      controller: _confirmController,
-                      obscureText: _obscurePassword,
-                      textInputAction: TextInputAction.done,
-                      decoration: const InputDecoration(
-                        labelText: 'Confirm password',
-                        prefixIcon: Icon(Icons.lock_outline),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: _validateConfirm,
-                    ),
-
+                    // Only takes up space when there is an error to show.
                     if (_errorMessage != null) ...[
                       const SizedBox(height: 16),
                       Container(
@@ -232,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                     const SizedBox(height: 24),
                     FilledButton(
-                      onPressed: _isLoading ? null : _register,
+                      onPressed: _isLoading ? null : _signIn,
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
@@ -242,7 +203,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text('Create account'),
+                          : const Text('Sign in'),
+                    ),
+
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Don't have an account?", style: text.bodyMedium),
+                        TextButton(
+                          onPressed: _isLoading
+                              ? null
+                              : () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const RegisterScreen(),
+                                    ),
+                                  );
+                                },
+                          child: const Text('Register'),
+                        ),
+                      ],
                     ),
                   ],
                 ),

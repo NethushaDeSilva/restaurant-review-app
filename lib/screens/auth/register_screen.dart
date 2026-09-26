@@ -1,23 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../services/auth_service.dart';
-import 'register_screen.dart';
+import '../../services/auth_service.dart';
 
-/// Sign-in screen. The link at the bottom opens the register screen.
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+/// Create-account screen, opened from the link on the login screen.
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  // The key gives access to the Form's validate() method.
+class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmController = TextEditingController();
 
   bool _isLoading = false;
   bool _obscurePassword = true;
@@ -25,14 +25,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    // Controllers hold memory until they are disposed of.
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmController.dispose();
     super.dispose();
   }
 
-  Future<void> _signIn() async {
-    // validate() runs every validator below and returns false if any failed.
+  Future<void> _register() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -43,12 +43,16 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await AuthService.signIn(
+      await AuthService.register(
+        _nameController.text.trim(),
         _emailController.text.trim(),
         _passwordController.text,
       );
-      // No navigation here. main.dart is listening to authChanges() and
-      // swaps this screen for the app as soon as sign-in succeeds.
+      // Registering signs the user in automatically, so main.dart swaps to
+      // the app. Popping this screen keeps the back stack tidy.
+      if (mounted) {
+        Navigator.pop(context);
+      }
     } on FirebaseAuthException catch (error) {
       if (mounted) {
         setState(() => _errorMessage = AuthService.messageFor(error));
@@ -58,11 +62,20 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() => _errorMessage = 'Something went wrong. Try again.');
       }
     } finally {
-      // mounted is false if the widget was removed while we were waiting.
       if (mounted) {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  String? _validateName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Enter your name';
+    }
+    if (value.trim().length < 2) {
+      return 'Name is too short';
+    }
+    return null;
   }
 
   String? _validateEmail(String? value) {
@@ -78,10 +91,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Enter your password';
+      return 'Choose a password';
     }
     if (value.length < 6) {
       return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
+
+  String? _validateConfirm(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Re-enter your password';
+    }
+    if (value != _passwordController.text) {
+      return 'Passwords do not match';
     }
     return null;
   }
@@ -92,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final ColorScheme colours = Theme.of(context).colorScheme;
 
     return Scaffold(
+      appBar: AppBar(title: const Text('Create account')),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -103,26 +127,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Icon(
-                      Icons.restaurant_menu,
-                      size: 64,
-                      color: colours.primary,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Colombo Eats',
-                      textAlign: TextAlign.center,
-                      style: text.headlineMedium,
-                    ),
+                    Text('Join Colombo Eats', style: text.headlineSmall),
                     const SizedBox(height: 4),
                     Text(
-                      'Sign in to read and write reviews',
-                      textAlign: TextAlign.center,
+                      'Your name appears on the reviews you write',
                       style: text.bodyMedium?.copyWith(
                         color: colours.onSurfaceVariant,
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 24),
+
+                    TextFormField(
+                      controller: _nameController,
+                      textCapitalization: TextCapitalization.words,
+                      textInputAction: TextInputAction.next,
+                      decoration: const InputDecoration(
+                        labelText: 'Full name',
+                        prefixIcon: Icon(Icons.person_outline),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: _validateName,
+                    ),
+                    const SizedBox(height: 16),
 
                     TextFormField(
                       controller: _emailController,
@@ -140,9 +166,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
-                      textInputAction: TextInputAction.done,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: 'Password',
+                        helperText: 'At least 6 characters',
                         prefixIcon: const Icon(Icons.lock_outline),
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
@@ -160,8 +187,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       validator: _validatePassword,
                     ),
+                    const SizedBox(height: 16),
 
-                    // Only takes up space when there is an error to show.
+                    TextFormField(
+                      controller: _confirmController,
+                      obscureText: _obscurePassword,
+                      textInputAction: TextInputAction.done,
+                      decoration: const InputDecoration(
+                        labelText: 'Confirm password',
+                        prefixIcon: Icon(Icons.lock_outline),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: _validateConfirm,
+                    ),
+
                     if (_errorMessage != null) ...[
                       const SizedBox(height: 16),
                       Container(
@@ -193,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     const SizedBox(height: 24),
                     FilledButton(
-                      onPressed: _isLoading ? null : _signIn,
+                      onPressed: _isLoading ? null : _register,
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
@@ -203,29 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text('Sign in'),
-                    ),
-
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Don't have an account?", style: text.bodyMedium),
-                        TextButton(
-                          onPressed: _isLoading
-                              ? null
-                              : () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RegisterScreen(),
-                                    ),
-                                  );
-                                },
-                          child: const Text('Register'),
-                        ),
-                      ],
+                          : const Text('Create account'),
                     ),
                   ],
                 ),

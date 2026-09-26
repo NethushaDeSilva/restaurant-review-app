@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../models/restaurant.dart';
-import '../models/review.dart';
-import '../services/auth_service.dart';
-import '../services/database_service.dart';
-import '../utils/ratings.dart';
-import '../widgets/restaurant_image.dart';
-import 'add_review_screen.dart';
+import '../../models/restaurant.dart';
+import '../../models/review.dart';
+import '../../services/auth_service.dart';
+import '../../services/database_service.dart';
+import '../../utils/ratings.dart';
+import '../../shared_widgets/restaurant_image.dart';
+import '../my_reviews/add_review_screen.dart';
 
 /// The "detail" half of the master/detail pair.
 ///
