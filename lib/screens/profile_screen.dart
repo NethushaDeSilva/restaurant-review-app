@@ -98,6 +98,24 @@ class ProfileScreen extends StatelessWidget {
               StreamBuilder<List<Review>>(
                 stream: DatabaseService.reviewsStream(),
                 builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          'Could not load your stats.',
+                          style: text.bodyMedium?.copyWith(
+                            color: colours.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+
                   final List<Review> all = snapshot.data ?? [];
                   final String myId = user?.uid ?? '';
 

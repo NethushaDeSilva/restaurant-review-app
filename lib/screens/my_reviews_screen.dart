@@ -116,6 +116,14 @@ class MyReviewsScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
+          if (restaurantSnapshot.hasError) {
+            return _buildEmpty(
+              context,
+              'Could not load your reviews',
+              'Check your connection and try again.',
+            );
+          }
+
           final List<Restaurant> restaurants = restaurantSnapshot.data ?? [];
 
           return StreamBuilder<List<Review>>(
