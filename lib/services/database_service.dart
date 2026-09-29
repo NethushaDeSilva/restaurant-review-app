@@ -7,8 +7,6 @@ import '../models/review.dart';
 class DatabaseService {
   static final DatabaseReference _db = FirebaseDatabase.instance.ref();
 
-  // ---------------------------------------------------------------- READ
-
   /// Live list of every restaurant, sorted by name.
   static Stream<List<Restaurant>> restaurantsStream() {
     return _db.child('restaurants').onValue.map((DatabaseEvent event) {
@@ -49,12 +47,6 @@ class DatabaseService {
       return reviews;
     });
   }
-
-  // -------------------------------------------------- CREATE / UPDATE / DELETE
-  //
-  // Reviews and restaurants both go through the same three operations. In
-  // each case push() generates a unique key, so two people writing at the
-  // same moment cannot overwrite each other.
 
   static Future<void> addReview(Review review) async {
     await _db.child('reviews').push().set(review.toMap());
