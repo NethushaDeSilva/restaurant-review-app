@@ -5,7 +5,7 @@ import '../../models/review.dart';
 import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 import '../../utils/ratings.dart';
-import '../../shared_widgets/restaurant_image.dart';
+import '../widgets/restaurant_image.dart';
 import 'add_restaurant_screen.dart';
 import '../restaurants/restaurant_detail_screen.dart';
 

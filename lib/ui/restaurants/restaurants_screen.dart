@@ -6,7 +6,7 @@ import '../../models/review.dart';
 import '../../services/database_service.dart';
 import '../../services/location_service.dart';
 import '../../utils/ratings.dart';
-import '../../shared_widgets/restaurant_card.dart';
+import '../widgets/restaurant_card.dart';
 import 'restaurant_detail_screen.dart';
 
 /// Live restaurant list with rating filtering and optional distance sorting.

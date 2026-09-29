@@ -4,7 +4,7 @@ import '../../models/restaurant.dart';
 import '../../models/review.dart';
 import '../../services/database_service.dart';
 import '../../utils/ratings.dart';
-import '../../shared_widgets/restaurant_card.dart';
+import '../widgets/restaurant_card.dart';
 import '../restaurants/restaurant_detail_screen.dart';
 
 /// Up to four restaurants ranked by live review averages.

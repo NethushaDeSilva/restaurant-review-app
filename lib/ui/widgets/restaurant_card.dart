@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/restaurant.dart';
+import '../../models/restaurant.dart';
 import 'restaurant_image.dart';
 
 /// List card using live review statistics, not the stored restaurant rating.
