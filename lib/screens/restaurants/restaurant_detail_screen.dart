@@ -278,8 +278,9 @@ class RestaurantDetailScreen extends StatelessWidget {
           final List<Review> mine = (snapshot.data ?? <Review>[])
               .where((review) => review.restaurantId == restaurant.id)
               .toList();
-          final ({double average, int count})? stats =
-              ratingsByRestaurant(mine)[restaurant.id];
+          final ({double average, int count})? stats = ratingsByRestaurant(
+            mine,
+          )[restaurant.id];
 
           return OrientationBuilder(
             builder: (context, orientation) {

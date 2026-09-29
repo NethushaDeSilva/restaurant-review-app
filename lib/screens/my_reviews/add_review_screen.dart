@@ -136,7 +136,8 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     } catch (error) {
       if (mounted) {
         setState(() {
-          _errorMessage = 'Could not save your review. Check your connection '
+          _errorMessage =
+              'Could not save your review. Check your connection '
               'and try again.';
         });
       }

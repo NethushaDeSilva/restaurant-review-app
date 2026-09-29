@@ -220,9 +220,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
             Text(
               detail,
               textAlign: TextAlign.center,
-              style: text.bodyMedium?.copyWith(
-                color: colours.onSurfaceVariant,
-              ),
+              style: text.bodyMedium?.copyWith(color: colours.onSurfaceVariant),
             ),
           ],
         ),

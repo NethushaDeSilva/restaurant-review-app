@@ -40,9 +40,8 @@ class MyReviewsScreen extends StatelessWidget {
     try {
       await DatabaseService.deleteReview(review.id);
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Review deleted')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Review deleted')));
       }
     } catch (error) {
       if (context.mounted) {
@@ -84,9 +83,7 @@ class MyReviewsScreen extends StatelessWidget {
             Text(
               detail,
               textAlign: TextAlign.center,
-              style: text.bodyMedium?.copyWith(
-                color: colours.onSurfaceVariant,
-              ),
+              style: text.bodyMedium?.copyWith(color: colours.onSurfaceVariant),
             ),
           ],
         ),
@@ -228,7 +225,8 @@ class MyReviewsScreen extends StatelessWidget {
                               IconButton(
                                 icon: const Icon(Icons.delete_outline),
                                 tooltip: 'Delete',
-                                onPressed: () => _confirmDelete(context, review),
+                                onPressed: () =>
+                                    _confirmDelete(context, review),
                               ),
                             ],
                           ),

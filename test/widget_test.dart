@@ -164,7 +164,11 @@ void main() {
 
     test('rounds the average to one decimal place', () {
       final Map<String, ({double average, int count})> ratings =
-          ratingsByRestaurant([review('r1', 4.0), review('r1', 4.0), review('r1', 5.0)]);
+          ratingsByRestaurant([
+            review('r1', 4.0),
+            review('r1', 4.0),
+            review('r1', 5.0),
+          ]);
 
       expect(ratings['r1']?.average, 4.3);
     });

@@ -383,8 +383,10 @@ class _AddRestaurantScreenState extends State<AddRestaurantScreen> {
                         prefixIcon: Icon(Icons.local_dining_outlined),
                         border: OutlineInputBorder(),
                       ),
-                      validator: (value) =>
-                          _required(value, 'List a few dishes you are known for'),
+                      validator: (value) => _required(
+                        value,
+                        'List a few dishes you are known for',
+                      ),
                     ),
                     const SizedBox(height: 16),
 
@@ -447,9 +449,7 @@ class _AddRestaurantScreenState extends State<AddRestaurantScreen> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : Text(
-                              _isEditing
-                                  ? 'Save changes'
-                                  : 'Add restaurant',
+                              _isEditing ? 'Save changes' : 'Add restaurant',
                             ),
                     ),
                   ],

@@ -73,9 +73,8 @@ class MyRestaurantsScreen extends StatelessWidget {
     try {
       await DatabaseService.deleteRestaurant(restaurant.id);
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Restaurant deleted')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Restaurant deleted')));
       }
     } catch (error) {
       if (context.mounted) {
@@ -247,8 +246,7 @@ class MyRestaurantsScreen extends StatelessWidget {
                                   IconButton(
                                     icon: const Icon(Icons.edit_outlined),
                                     tooltip: 'Edit',
-                                    onPressed: () =>
-                                        _edit(context, restaurant),
+                                    onPressed: () => _edit(context, restaurant),
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.delete_outline),

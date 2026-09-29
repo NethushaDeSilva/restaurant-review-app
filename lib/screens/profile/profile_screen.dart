@@ -16,7 +16,9 @@ class ProfileScreen extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Sign out?'),
-          content: const Text('You will need to sign in again to write reviews.'),
+          content: const Text(
+            'You will need to sign in again to write reviews.',
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
@@ -44,7 +46,9 @@ class ProfileScreen extends StatelessWidget {
     final User? user = AuthService.currentUser;
     final String name = user?.displayName ?? 'Guest';
     final String email = user?.email ?? '';
-    final String initial = name.isEmpty ? '?' : name.substring(0, 1).toUpperCase();
+    final String initial = name.isEmpty
+        ? '?'
+        : name.substring(0, 1).toUpperCase();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),
