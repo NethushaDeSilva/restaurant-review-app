@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/auth_service.dart';
+import '../../utils/form_validators.dart';
 import 'register_screen.dart';
 
 /// Sign-in screen. The link at the bottom opens the register screen.
@@ -62,17 +63,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Enter your email address';
-    }
-    final RegExp pattern = RegExp(r'^[\w\.\-]+@[\w\-]+\.[a-zA-Z]{2,}$');
-    if (!pattern.hasMatch(value.trim())) {
-      return 'Enter a valid email address';
-    }
-    return null;
-  }
-
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Enter your password';
@@ -130,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         prefixIcon: Icon(Icons.email_outlined),
                         border: OutlineInputBorder(),
                       ),
-                      validator: _validateEmail,
+                      validator: validateEmail,
                     ),
                     const SizedBox(height: 16),
 
