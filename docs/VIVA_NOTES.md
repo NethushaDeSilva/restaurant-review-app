@@ -40,7 +40,7 @@ Three folders do three jobs:
 |---|---|---|
 | `models/` | `Restaurant`, `Review` | Plain Dart classes. Know how to turn a Firebase record into an object and back. |
 | `services/` | Auth, Database, Location | Every Firebase and GPS call. Screens stay about layout. |
-| `screens/`, `widgets/` | The UI | Screens are whole pages; widgets are pieces reused across pages. |
+| `ui/`, `ui/widgets/`, `ui/theme/` | The UI | Screens are grouped by feature; widgets and theme are shared across pages. |
 
 If asked *why services*: without it, the same `FirebaseDatabase.instance.ref()`
 code would be copied into five screens, and changing the data shape would mean
