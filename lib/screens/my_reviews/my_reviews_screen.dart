@@ -107,8 +107,6 @@ class MyReviewsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('My Reviews')),
 
-      // The outer stream supplies restaurants, so each review can show the
-      // name of the place it belongs to and open the right edit screen.
       body: StreamBuilder<List<Restaurant>>(
         stream: DatabaseService.restaurantsStream(),
         builder: (context, restaurantSnapshot) {
@@ -141,10 +139,7 @@ class MyReviewsScreen extends StatelessWidget {
                 );
               }
 
-              // Only the reviews written by the signed-in user, and only
-              // where the restaurant still exists. A listing that has been
-              // deleted leaves its reviews in the database, but there is
-              // nothing useful to show for them.
+              // Hide reviews whose restaurant has been deleted.
               final List<Review> all = reviewSnapshot.data ?? [];
               final List<Review> mine = all
                   .where(
@@ -170,7 +165,6 @@ class MyReviewsScreen extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final Review review = mine[index];
 
-                  // Find the restaurant this review belongs to.
                   Restaurant? restaurant;
                   for (final Restaurant candidate in restaurants) {
                     if (candidate.id == review.restaurantId) {

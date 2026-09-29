@@ -32,8 +32,6 @@ class ProfileScreen extends StatelessWidget {
     );
 
     if (shouldSignOut == true) {
-      // main.dart is listening to authChanges() and shows the login screen
-      // as soon as this completes.
       await AuthService.signOut();
     }
   }
@@ -93,8 +91,6 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Counts come from the same live review stream, so they update
-              // straight away when a review is added or deleted.
               StreamBuilder<List<Review>>(
                 stream: DatabaseService.reviewsStream(),
                 builder: (context, snapshot) {

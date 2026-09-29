@@ -143,8 +143,6 @@ class RestaurantDetailScreen extends StatelessWidget {
 
         Row(
           children: [
-            // A restaurant with no reviews yet has no entry in the live
-            // ratings map.
             if (stats != null) ...[
               Icon(Icons.star, size: 20, color: colours.primary),
               const SizedBox(width: 4),
@@ -177,8 +175,6 @@ class RestaurantDetailScreen extends StatelessWidget {
         ],
         const SizedBox(height: 14),
 
-        // Shown only to the owner, so it is obvious why there is no button
-        // to write a review on this page.
         if (isMyRestaurant) ...[
           Container(
             width: double.infinity,
@@ -243,8 +239,6 @@ class RestaurantDetailScreen extends StatelessWidget {
         const SizedBox(height: 8),
         Text(restaurant.description, style: text.bodyMedium),
 
-        // Only user-added listings carry this, so the section is hidden
-        // when it is empty rather than showing an empty heading.
         if (restaurant.popularDishes.isNotEmpty) ...[
           const SizedBox(height: 20),
           Text('Popular dishes', style: text.titleMedium),
@@ -263,9 +257,7 @@ class RestaurantDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // An owner may not review their own restaurant, so the button that
-    // starts a review is not offered to them at all. The database rules
-    // reject it as well, in case anyone tries another way in.
+    // Hide the review action for the listing owner.
     final String myId = AuthService.currentUser?.uid ?? '';
     final bool isMyRestaurant = restaurant.isOwnedBy(myId);
 
@@ -279,8 +271,6 @@ class RestaurantDetailScreen extends StatelessWidget {
               label: const Text('Write a review'),
             ),
 
-      // One subscription to the reviews stream serves both the rating
-      // header and the review list below it, filtered to this restaurant.
       body: StreamBuilder<List<Review>>(
         stream: DatabaseService.reviewsStream(),
         builder: (context, snapshot) {
@@ -309,9 +299,7 @@ class RestaurantDetailScreen extends StatelessWidget {
           return OrientationBuilder(
             builder: (context, orientation) {
               if (orientation == Orientation.landscape) {
-                // Sideways: the photo takes the left and the text scrolls
-                // independently on the right. Without this the photo would
-                // eat most of a short landscape screen.
+                // Keep the photo beside the text on short landscape screens.
                 return Row(
                   children: [
                     Expanded(
@@ -339,7 +327,6 @@ class RestaurantDetailScreen extends StatelessWidget {
                 );
               }
 
-              // Upright: the familiar photo-on-top layout.
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,10 +1,3 @@
-// Unit tests for the two model classes.
-//
-// The app itself cannot be pumped in a test without a running Firebase
-// connection, so these cover the part that has real logic in it: turning a
-// Firebase record into a Dart object and back again. The rest of the testing
-// evidence for this assignment is the manual test table in the documentation.
-
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:restaurant_review_app/models/restaurant.dart';
@@ -33,7 +26,6 @@ void main() {
     });
 
     test('falls back safely when fields are missing', () {
-      // A record saved without a rating should not crash the whole list.
       final Restaurant restaurant = Restaurant.fromMap('r2', {
         'name': 'Nihonbashi',
       });
@@ -44,7 +36,6 @@ void main() {
     });
 
     test('handles a rating stored as a whole number', () {
-      // Firebase returns 5 rather than 5.0 when the decimal is zero.
       final Restaurant restaurant = Restaurant.fromMap('r3', {
         'name': 'Green Cabin',
         'rating': 5,
@@ -63,8 +54,6 @@ void main() {
     }
 
     test('an imported restaurant has no owner', () {
-      // The eight restaurants loaded by the initial import carry no ownerId,
-      // so nobody owns them and anybody may review them.
       final Restaurant restaurant = build('');
 
       expect(restaurant.isUserAdded, false);
@@ -85,9 +74,6 @@ void main() {
     });
 
     test('an empty user id never matches an unowned restaurant', () {
-      // Guards the case where a signed-out uid ('') is compared against an
-      // imported restaurant whose ownerId is also '', which would otherwise
-      // wrongly report ownership.
       final Restaurant restaurant = build('');
 
       expect(restaurant.isOwnedBy(''), false);
@@ -177,7 +163,6 @@ void main() {
     });
 
     test('rounds the average to one decimal place', () {
-      // 4.0 + 4.0 + 5.0 = 13.0, / 3 = 4.333... which should round to 4.3.
       final Map<String, ({double average, int count})> ratings =
           ratingsByRestaurant([review('r1', 4.0), review('r1', 4.0), review('r1', 5.0)]);
 

@@ -34,10 +34,9 @@ class RestaurantImage extends StatelessWidget {
       width: double.infinity,
       fit: BoxFit.cover,
 
-      // Runs repeatedly while the photo downloads.
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) {
-          return child; // finished downloading, show the real image
+          return child;
         }
         return Container(
           height: height,
@@ -46,7 +45,6 @@ class RestaurantImage extends StatelessWidget {
         );
       },
 
-      // Runs if the URL is wrong or the device is offline.
       errorBuilder: (context, error, stackTrace) {
         return Container(
           height: height,

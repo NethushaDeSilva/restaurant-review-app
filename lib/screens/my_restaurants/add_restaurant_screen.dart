@@ -143,7 +143,7 @@ class _AddRestaurantScreenState extends State<AddRestaurantScreen> {
       final String ownerId = AuthService.currentUser?.uid ?? '';
 
       final Restaurant restaurant = Restaurant(
-        // When creating, the id is ignored: Firebase generates one.
+        // Firebase generates the id when creating a record.
         id: widget.existingRestaurant?.id ?? '',
         ownerId: ownerId,
         name: _nameController.text.trim(),

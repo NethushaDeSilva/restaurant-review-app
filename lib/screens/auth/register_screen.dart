@@ -49,8 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _emailController.text.trim(),
         _passwordController.text,
       );
-      // Registering signs the user in automatically, so main.dart swaps to
-      // the app. Popping this screen keeps the back stack tidy.
+      // Registration signs in automatically; close the registration route.
       if (mounted) {
         Navigator.pop(context);
       }

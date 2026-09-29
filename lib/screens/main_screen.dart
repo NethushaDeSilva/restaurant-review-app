@@ -65,9 +65,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // shortestSide is the width of the device in portrait, whichever way it
-    // is currently held, which is the standard way to ask "phone or tablet"
-    // independent of rotation.
+    // Use shortestSide so rotating a phone does not select the tablet layout.
     final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     if (isTablet) {

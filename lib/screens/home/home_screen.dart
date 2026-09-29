@@ -79,9 +79,7 @@ class HomeScreen extends StatelessWidget {
             );
           }
 
-          // The rating shown for each restaurant is computed live from every
-          // review, not read from restaurant.rating, so this needs its own
-          // stream nested inside the restaurants one.
+          // Display ratings calculated from reviews, not restaurant.rating.
           return StreamBuilder<List<Review>>(
             stream: DatabaseService.reviewsStream(),
             builder: (context, reviewSnapshot) {
@@ -106,9 +104,7 @@ class HomeScreen extends StatelessWidget {
               final Map<String, ({double average, int count})> ratings =
                   ratingsByRestaurant(reviewSnapshot.data ?? []);
 
-              // Highest live average first. A restaurant with no reviews has
-              // no entry in the map, so it has nothing to rank by and sinks
-              // to the bottom rather than being treated as a 0.0.
+              // Unreviewed restaurants sort after rated restaurants.
               final List<Restaurant> sorted = List.from(all);
               sorted.sort((a, b) {
                 final ({double average, int count})? ratingA = ratings[a.id];
@@ -126,8 +122,6 @@ class HomeScreen extends StatelessWidget {
               });
               final List<Restaurant> featured = sorted.take(4).toList();
 
-              // On a wide screen the cards would stretch to an awkward
-              // width, so the column is capped and centred instead.
               return Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 700),

@@ -121,7 +121,6 @@ class MyRestaurantsScreen extends StatelessWidget {
             );
           }
 
-          // Only the listings this user owns.
           final List<Restaurant> all = snapshot.data ?? [];
           final List<Restaurant> mine = all
               .where((restaurant) => restaurant.isOwnedBy(myId))
@@ -161,9 +160,7 @@ class MyRestaurantsScreen extends StatelessWidget {
             );
           }
 
-          // The rating shown for each of my restaurants is computed live
-          // from every review, not read from restaurant.rating, so this
-          // needs its own stream nested inside the restaurants one.
+          // Display ratings calculated from reviews, not restaurant.rating.
           return StreamBuilder<List<Review>>(
             stream: DatabaseService.reviewsStream(),
             builder: (context, reviewSnapshot) {
@@ -230,8 +227,6 @@ class MyRestaurantsScreen extends StatelessWidget {
                               const SizedBox(height: 8),
                               Row(
                                 children: [
-                                  // A restaurant with no reviews yet has no
-                                  // entry in the live ratings map.
                                   if (stats != null) ...[
                                     Icon(
                                       Icons.star,

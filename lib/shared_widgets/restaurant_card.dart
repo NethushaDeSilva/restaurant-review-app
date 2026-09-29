@@ -34,7 +34,7 @@ class RestaurantCard extends StatelessWidget {
     final ColorScheme colours = Theme.of(context).colorScheme;
 
     return Card(
-      clipBehavior: Clip.antiAlias, // keeps the photo inside the rounded corners
+      clipBehavior: Clip.antiAlias,
       margin: const EdgeInsets.only(bottom: 16),
       child: InkWell(
         onTap: onTap,
@@ -98,8 +98,6 @@ class RestaurantCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // A restaurant with no reviews yet has no entry in the
-                      // live ratings map, so it shows a "New" chip instead.
                       if (reviewCount > 0) ...[
                         Icon(Icons.star, size: 18, color: colours.primary),
                         const SizedBox(width: 2),
@@ -176,7 +174,7 @@ class RestaurantGridCard extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.zero, // the grid supplies the spacing
+      margin: EdgeInsets.zero,
       child: InkWell(
         onTap: onTap,
         child: Column(

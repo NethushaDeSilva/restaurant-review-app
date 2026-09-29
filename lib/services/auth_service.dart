@@ -21,7 +21,6 @@ class AuthService {
   ) async {
     final UserCredential credential = await _auth
         .createUserWithEmailAndPassword(email: email, password: password);
-    // Store the name on the account so reviews can show who wrote them.
     await credential.user?.updateDisplayName(name);
     await credential.user?.reload();
   }

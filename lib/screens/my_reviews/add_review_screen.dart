@@ -51,7 +51,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   @override
   void initState() {
     super.initState();
-    // When editing, start from the values already saved.
     final Review? existing = widget.existingReview;
     if (existing != null) {
       _commentController.text = existing.comment;
@@ -92,7 +91,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     final DateTime? chosen = await showDatePicker(
       context: context,
       initialDate: _visitDate,
-      // A visit cannot be in the future, and a year back is far enough.
       firstDate: DateTime(now.year - 1, now.month, now.day),
       lastDate: now,
     );
@@ -118,7 +116,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           AuthService.currentUser?.displayName ?? 'Anonymous';
 
       final Review review = Review(
-        // When creating, the id is ignored: Firebase generates one.
+        // Firebase generates the id when creating a record.
         id: widget.existingReview?.id ?? '',
         restaurantId: widget.restaurant.id,
         userId: userId,
@@ -196,7 +194,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    // FIELD 1 - slider
                     Text('Your rating', style: text.labelLarge),
                     Row(
                       children: [
@@ -233,7 +230,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    // FIELD 2 - dropdown
                     DropdownButtonFormField<String>(
                       initialValue: _visitType,
                       decoration: const InputDecoration(
@@ -255,7 +251,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // FIELD 3 - date picker
                     InkWell(
                       onTap: _pickDate,
                       child: InputDecorator(
@@ -269,7 +264,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // FIELD 4 - multi-line text
                     TextFormField(
                       controller: _commentController,
                       maxLines: 5,

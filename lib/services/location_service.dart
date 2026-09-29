@@ -35,7 +35,6 @@ class LocationService {
   /// Works through the three things that can stop us getting a position,
   /// in the order they have to be checked.
   static Future<Position> currentPosition() async {
-    // 1. Is location switched on for the whole device?
     final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       throw LocationException(
@@ -44,7 +43,6 @@ class LocationService {
       );
     }
 
-    // 2. Has the user granted this app permission? If not, ask once.
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -55,8 +53,6 @@ class LocationService {
       }
     }
 
-    // 3. Permanently denied means the system dialog will not appear again,
-    //    so the user has to change it in Settings themselves.
     if (permission == LocationPermission.deniedForever) {
       throw LocationException(
         'Location permission is permanently denied. Allow it in Android '
@@ -67,8 +63,7 @@ class LocationService {
     try {
       return await Geolocator.getCurrentPosition(locationSettings: _settings);
     } on TimeoutException {
-      // No fresh fix within the time limit. Rather than failing outright,
-      // fall back to the last position the device recorded.
+      // Use the last known position if the fresh GPS request times out.
       final Position? lastKnown = await Geolocator.getLastKnownPosition();
       if (lastKnown != null) {
         return lastKnown;

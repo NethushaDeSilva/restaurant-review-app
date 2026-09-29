@@ -31,7 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _signIn() async {
-    // validate() runs every validator below and returns false if any failed.
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -46,8 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailController.text.trim(),
         _passwordController.text,
       );
-      // No navigation here. main.dart is listening to authChanges() and
-      // swaps this screen for the app as soon as sign-in succeeds.
+      // AuthGate handles navigation after sign-in.
     } on FirebaseAuthException catch (error) {
       if (mounted) {
         setState(() => _errorMessage = AuthService.messageFor(error));
@@ -148,7 +146,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator: _validatePassword,
                     ),
 
-                    // Only takes up space when there is an error to show.
                     if (_errorMessage != null) ...[
                       const SizedBox(height: 16),
                       Container(

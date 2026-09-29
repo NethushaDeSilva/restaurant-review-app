@@ -132,8 +132,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     final TextTheme text = Theme.of(context).textTheme;
     final ColorScheme colours = Theme.of(context).colorScheme;
 
-    // AnimatedCrossFade fades between the two children and animates the
-    // height change, so the panel slides open instead of appearing instantly.
     return AnimatedCrossFade(
       duration: const Duration(milliseconds: 250),
       crossFadeState: _showFilter
@@ -257,7 +255,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
       builder: (context, orientation) {
         final int columns = _columnCount(orientation);
 
-        // Single column: a plain vertical list of wide cards.
         if (columns == 1) {
           return ListView.builder(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -275,7 +272,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
           );
         }
 
-        // Two or more columns: a grid of compact cards.
         return GridView.builder(
           padding: const EdgeInsets.all(16),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -325,17 +321,13 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
         ],
       ),
 
-      // StreamBuilder rebuilds this screen every time the restaurants node
-      // changes in Firebase, so the list stays current without a refresh.
       body: StreamBuilder<List<Restaurant>>(
         stream: DatabaseService.restaurantsStream(),
         builder: (context, snapshot) {
-          // 1. Still connecting for the first time.
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // 2. Firebase returned an error.
           if (snapshot.hasError) {
             return _buildMessage(
               Icons.cloud_off,
@@ -346,7 +338,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
 
           final List<Restaurant> all = snapshot.data ?? [];
 
-          // 3. Connected, but the database is empty.
           if (all.isEmpty) {
             return _buildMessage(
               Icons.restaurant_outlined,
@@ -355,9 +346,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
             );
           }
 
-          // The rating filter and every card's rating run off the live
-          // average computed from reviews, so a second stream is nested here
-          // rather than reading restaurant.rating.
+          // Filter and display using live review averages.
           return StreamBuilder<List<Review>>(
             stream: DatabaseService.reviewsStream(),
             builder: (context, reviewSnapshot) {

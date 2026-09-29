@@ -9,8 +9,6 @@ import 'services/auth_service.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
-  // Firebase has to finish starting before runApp, and that needs the
-  // Flutter engine to be ready first.
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const RestaurantReviewApp());
@@ -25,9 +23,6 @@ class RestaurantReviewApp extends StatelessWidget {
       title: 'Colombo Eats',
       debugShowCheckedModeBanner: false,
 
-      // themeMode.system makes Flutter read the phone's own light/dark
-      // setting and pick the matching theme automatically. Change the
-      // device theme and the app follows without any code running.
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
@@ -51,8 +46,6 @@ class AuthGate extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: AuthService.authChanges(),
       builder: (context, snapshot) {
-        // Firebase is still checking whether a session was saved from a
-        // previous run.
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
