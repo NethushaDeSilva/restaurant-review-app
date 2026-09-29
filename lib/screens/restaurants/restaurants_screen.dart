@@ -98,13 +98,10 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     List<Restaurant> all,
     Map<String, ({double average, int count})> ratings,
   ) {
-    final List<Restaurant> matches = [];
-    for (final Restaurant restaurant in all) {
+    final List<Restaurant> matches = all.where((restaurant) {
       final double average = ratings[restaurant.id]?.average ?? 0;
-      if (average >= _minRating) {
-        matches.add(restaurant);
-      }
-    }
+      return average >= _minRating;
+    }).toList();
 
     if (_position != null) {
       matches.sort((a, b) {

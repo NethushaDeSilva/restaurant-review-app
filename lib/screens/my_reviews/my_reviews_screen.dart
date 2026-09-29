@@ -146,18 +146,15 @@ class MyReviewsScreen extends StatelessWidget {
               // deleted leaves its reviews in the database, but there is
               // nothing useful to show for them.
               final List<Review> all = reviewSnapshot.data ?? [];
-              final List<Review> mine = [];
-              for (final Review review in all) {
-                if (review.userId != myId) {
-                  continue;
-                }
-                for (final Restaurant candidate in restaurants) {
-                  if (candidate.id == review.restaurantId) {
-                    mine.add(review);
-                    break;
-                  }
-                }
-              }
+              final List<Review> mine = all
+                  .where(
+                    (review) =>
+                        review.userId == myId &&
+                        restaurants.any(
+                          (restaurant) => restaurant.id == review.restaurantId,
+                        ),
+                  )
+                  .toList();
 
               if (mine.isEmpty) {
                 return _buildEmpty(

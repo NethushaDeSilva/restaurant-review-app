@@ -123,12 +123,9 @@ class MyRestaurantsScreen extends StatelessWidget {
 
           // Only the listings this user owns.
           final List<Restaurant> all = snapshot.data ?? [];
-          final List<Restaurant> mine = [];
-          for (final Restaurant restaurant in all) {
-            if (restaurant.isOwnedBy(myId)) {
-              mine.add(restaurant);
-            }
-          }
+          final List<Restaurant> mine = all
+              .where((restaurant) => restaurant.isOwnedBy(myId))
+              .toList();
 
           if (mine.isEmpty) {
             return Center(

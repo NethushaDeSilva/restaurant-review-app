@@ -16,10 +16,7 @@ Map<String, ({double average, int count})> ratingsByRestaurant(
 
   final Map<String, ({double average, int count})> result = {};
   grouped.forEach((restaurantId, ratings) {
-    double total = 0;
-    for (final double rating in ratings) {
-      total = total + rating;
-    }
+    final double total = ratings.fold<double>(0, (sum, rating) => sum + rating);
     final double rounded = double.parse(
       (total / ratings.length).toStringAsFixed(1),
     );

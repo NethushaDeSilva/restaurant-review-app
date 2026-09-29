@@ -300,12 +300,9 @@ class RestaurantDetailScreen extends StatelessWidget {
             );
           }
 
-          final List<Review> mine = [];
-          for (final Review review in snapshot.data ?? []) {
-            if (review.restaurantId == restaurant.id) {
-              mine.add(review);
-            }
-          }
+          final List<Review> mine = (snapshot.data ?? <Review>[])
+              .where((review) => review.restaurantId == restaurant.id)
+              .toList();
           final ({double average, int count})? stats =
               ratingsByRestaurant(mine)[restaurant.id];
 
