@@ -1,13 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// All Firebase Authentication calls live here so the screens stay focused
-/// on layout. Everything is static because there is only ever one signed-in
-/// user and no state to keep.
+/// Email/password authentication and user-facing error messages.
 class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Fires every time the user signs in or out. main.dart listens to this
-  /// to decide whether to show the login screen or the app.
+  /// Authentication state observed by AuthGate.
   static Stream<User?> authChanges() {
     return _auth.authStateChanges();
   }
@@ -33,8 +30,7 @@ class AuthService {
     await _auth.signOut();
   }
 
-  /// Firebase returns codes like 'wrong-password'. Showing those to a user
-  /// is unhelpful, so they are translated into plain sentences here.
+  /// Maps authentication failures to user-facing messages.
   static String messageFor(FirebaseAuthException error) {
     switch (error.code) {
       case 'invalid-email':

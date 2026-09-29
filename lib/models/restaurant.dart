@@ -1,11 +1,4 @@
-/// A single restaurant record.
-///
-/// Restaurants are created by users from their profile. [ownerId] holds the
-/// Firebase Auth uid of whoever added it, which does two jobs: only the
-/// owner may edit or delete it, and the owner is blocked from reviewing it.
-///
-/// The eight restaurants loaded by the initial import have an empty
-/// ownerId, so nobody owns them and anybody may review them.
+/// Restaurant listing. Imported listings have no owner.
 class Restaurant {
   final String id;
   final String ownerId;
@@ -35,18 +28,13 @@ class Restaurant {
     required this.longitude,
   });
 
-  /// True when this restaurant was added by a user rather than loaded by the
-  /// initial import.
+  /// Whether this listing has an owner.
   bool get isUserAdded => ownerId.isNotEmpty;
 
   /// True if the given user added this restaurant.
   bool isOwnedBy(String userId) => ownerId.isNotEmpty && ownerId == userId;
 
-  /// Builds a Restaurant from one Firebase record.
-  ///
-  /// Firebase returns a Map with dynamic values, so each field is converted
-  /// to the type we expect. The ?? fallbacks mean a missing or misspelled
-  /// field gives an empty value instead of crashing the whole list.
+  /// Parses a database record, defaulting missing fields and invalid numbers.
   factory Restaurant.fromMap(String id, Map<dynamic, dynamic> map) {
     return Restaurant(
       id: id,

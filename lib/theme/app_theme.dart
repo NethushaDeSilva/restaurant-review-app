@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// One seed colour generates the whole palette for both modes.
-///
-/// ColorScheme.fromSeed builds a full Material 3 palette from this single
-/// colour and guarantees the text-on-background contrast ratios needed for
-/// accessibility, in light and dark. That is why the app defines one colour
-/// here rather than hard-coding colours on individual widgets.
+/// Shared seed for the light and dark Material themes.
 const Color kSeedColour = Color(0xFFBF360C); // deep orange
 
 final ThemeData lightTheme = ThemeData(

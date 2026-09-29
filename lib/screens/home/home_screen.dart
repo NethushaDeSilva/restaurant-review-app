@@ -7,8 +7,7 @@ import '../../utils/ratings.dart';
 import '../../shared_widgets/restaurant_card.dart';
 import '../restaurants/restaurant_detail_screen.dart';
 
-/// Landing tab: the highest-rated places, so the app opens on something
-/// useful rather than an empty dashboard.
+/// Up to four restaurants ranked by live review averages.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 

@@ -6,11 +6,7 @@ import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 import 'add_review_screen.dart';
 
-/// Every review the signed-in user has written.
-///
-/// This is where Update and Delete happen. The security rules only let a
-/// user change their own reviews, which is why this screen filters on the
-/// signed-in uid before showing anything.
+/// Editable reviews by the signed-in user for existing restaurants.
 class MyReviewsScreen extends StatelessWidget {
   const MyReviewsScreen({super.key});
 

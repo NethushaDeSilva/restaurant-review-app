@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
 
-/// Thrown when the device location cannot be read. The message is written
-/// for the user, so screens can show it directly.
+/// Location failure with a message suitable for display.
 class LocationException implements Exception {
   final String message;
   LocationException(this.message);
@@ -12,28 +11,17 @@ class LocationException implements Exception {
   String toString() => message;
 }
 
-/// Reads the device GPS so the Restaurants screen can show how far away
-/// each place is.
+/// Device location and straight-line distances.
 class LocationService {
-  /// How the position is requested.
-  ///
-  /// forceLocationManager is the important one. By default geolocator asks
-  /// Google Play Services' fused location provider, which hands back a
-  /// cached position whenever it judges one recent enough. That is why the
-  /// first tap could report an out-of-date location and a second tap was
-  /// needed to get the real one.
-  ///
-  /// Setting it to true makes Android use its own LocationManager, which
-  /// reads the current fix every time. Slightly slower, but correct on the
-  /// first attempt, which matters more here.
+  /// Use Android LocationManager to avoid the fused-provider caching issue.
+  /// A timed-out request may still fall back to a cached position.
   static final LocationSettings _settings = AndroidSettings(
     accuracy: LocationAccuracy.high,
     forceLocationManager: true,
     timeLimit: Duration(seconds: 15),
   );
 
-  /// Works through the three things that can stop us getting a position,
-  /// in the order they have to be checked.
+  /// Requires enabled location services and permission before requesting GPS.
   static Future<Position> currentPosition() async {
     final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {

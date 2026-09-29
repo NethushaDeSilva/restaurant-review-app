@@ -6,15 +6,7 @@ import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 import '../../services/location_service.dart';
 
-/// Adds a new restaurant, or edits one the signed-in user already owns.
-///
-/// The same screen does both jobs. When [existingRestaurant] is null it
-/// creates a record; when it holds a restaurant, the fields start filled in
-/// and saving updates that record instead.
-///
-/// The owner does not set a rating. A new listing starts at zero and shows
-/// as "New" until customers review it, so an owner cannot score their own
-/// restaurant.
+/// Creates a listing or edits [existingRestaurant]. Owners cannot set ratings.
 class AddRestaurantScreen extends StatefulWidget {
   final Restaurant? existingRestaurant;
 
@@ -88,8 +80,7 @@ class _AddRestaurantScreenState extends State<AddRestaurantScreen> {
     super.dispose();
   }
 
-  /// Fills the coordinates from the device GPS, so an owner standing in
-  /// their restaurant can tag it without typing numbers.
+  /// Captures coordinates from the device at the restaurant.
   Future<void> _useCurrentLocation() async {
     setState(() {
       _loadingLocation = true;

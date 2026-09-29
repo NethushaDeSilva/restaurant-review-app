@@ -5,15 +5,7 @@ import '../../models/review.dart';
 import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 
-/// Writes a new review, or edits one the user already wrote.
-///
-/// The same screen does both jobs. When [existingReview] is null it creates
-/// a record; when it holds a review, the fields start filled in and saving
-/// updates that record instead.
-///
-/// Four different field types are used here: a slider for the rating, a
-/// dropdown for the meal, a date picker for the visit date, and a multi-line
-/// text field for the comment.
+/// Creates a review or updates [existingReview].
 class AddReviewScreen extends StatefulWidget {
   final Restaurant restaurant;
   final Review? existingReview;
@@ -67,7 +59,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     super.dispose();
   }
 
-  /// Formats a date as "12 Aug 2026" without needing an extra package.
+  /// Database date format: day, English month abbreviation, year.
   String _formatDate(DateTime date) {
     const List<String> months = [
       'Jan',

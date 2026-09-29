@@ -5,18 +5,7 @@ import 'my_reviews/my_reviews_screen.dart';
 import 'profile/profile_screen.dart';
 import 'restaurants/restaurants_screen.dart';
 
-/// The shell that holds the app's navigation.
-///
-/// This is a StatefulWidget because the selected tab is state: it changes
-/// while the app runs and the UI has to repaint when it does. _selectedIndex
-/// remembers which tab is open, and setState tells Flutter to rebuild.
-///
-/// The navigation widget itself changes with screen size: a phone gets the
-/// familiar bottom NavigationBar, but on a tablet-width device that bar would
-/// sit far from the thumb and waste the side space, so a NavigationRail is
-/// used instead. Both share the same destinations and the same
-/// _selectedIndex, so switching between them at a size boundary (e.g.
-/// rotating a tablet) never loses the current tab.
+/// Four-tab shell with a navigation rail on tablets.
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -27,8 +16,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  /// The four screens the navigation switches between.
-  /// The list index matches the navigation destination index.
+  /// Screen, label and icon lists share the same destination indexes.
   static const List<Widget> _screens = [
     HomeScreen(),
     RestaurantsScreen(),

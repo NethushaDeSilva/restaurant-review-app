@@ -32,12 +32,7 @@ class RestaurantReviewApp extends StatelessWidget {
   }
 }
 
-/// Decides whether to show the login screen or the app itself.
-///
-/// This is the route protection: MainScreen and everything reachable from
-/// it can only be built when authChanges() has produced a signed-in user.
-/// Signing out pushes null down the stream and this rebuilds to the login
-/// screen on its own, with no navigation code anywhere else in the app.
+/// Switches the root screen when the authentication state changes.
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 

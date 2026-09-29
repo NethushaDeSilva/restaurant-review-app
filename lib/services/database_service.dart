@@ -3,11 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import '../models/restaurant.dart';
 import '../models/review.dart';
 
-/// Every Firebase Realtime Database call in the app.
-///
-/// Reads return Streams rather than Futures. A Stream keeps delivering new
-/// values whenever the data changes, so a list built from one updates by
-/// itself when a record is added on another device.
+/// Realtime collection reads and owner-scoped writes enforced by database rules.
 class DatabaseService {
   static final DatabaseReference _db = FirebaseDatabase.instance.ref();
 
@@ -83,12 +79,7 @@ class DatabaseService {
         .update(restaurant.toMap());
   }
 
-  /// Removes a restaurant listing.
-  ///
-  /// Deliberately does not delete the reviews customers wrote about it. If
-  /// an owner could remove reviews, they could delete the bad ones, and the
-  /// security rules keep deletion with the review's author for exactly that
-  /// reason. Reviews left without a restaurant simply stop being displayed.
+  /// Deletes the listing but retains reviews; only their authors may delete them.
   static Future<void> deleteRestaurant(String restaurantId) async {
     await _db.child('restaurants').child(restaurantId).remove();
   }

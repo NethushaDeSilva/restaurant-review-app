@@ -1,8 +1,4 @@
-/// A single review written by a user about one restaurant.
-///
-/// [userId] is the Firebase Auth uid of whoever wrote it. The database
-/// security rules use it to make sure a user can only edit or delete
-/// their own reviews.
+/// Restaurant review owned by [userId].
 class Review {
   final String id;
   final String restaurantId;

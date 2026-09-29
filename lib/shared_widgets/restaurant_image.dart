@@ -1,17 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Loads a restaurant photo from the internet.
-///
-/// Image.network on its own shows nothing while downloading and a red error
-/// box if the URL fails. The two builders below replace that with a spinner
-/// and a neutral fallback icon, so a slow connection or a dead link never
-/// makes the app look broken.
-///
-/// [height] is optional. When it is null the widget fills whatever space the
-/// parent gives it, which is what the grid layout needs.
-///
-/// [heroTag] is optional. When two screens use the same tag for the same
-/// photo, Flutter animates the image between them during the page change.
+/// Network photo with loading and error placeholders.
+/// [heroTag] enables the shared-image route transition.
 class RestaurantImage extends StatelessWidget {
   final String imageUrl;
   final double? height;

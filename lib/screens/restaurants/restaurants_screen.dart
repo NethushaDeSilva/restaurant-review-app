@@ -9,12 +9,7 @@ import '../../utils/ratings.dart';
 import '../../shared_widgets/restaurant_card.dart';
 import 'restaurant_detail_screen.dart';
 
-/// The "master" half of the master/detail pair.
-///
-/// Three things happen on this screen:
-///   - restaurants are read live from Firebase with a StreamBuilder
-///   - the GPS is used to show how far away each one is
-///   - the layout changes with orientation and screen size
+/// Live restaurant list with rating filtering and optional distance sorting.
 class RestaurantsScreen extends StatefulWidget {
   const RestaurantsScreen({super.key});
 
@@ -40,12 +35,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     );
   }
 
-  /// Asks for the device location, then sorts the list by distance.
-  ///
-  /// Everything that can go wrong (location switched off, permission denied,
-  /// permission permanently denied) comes back as a LocationException with a
-  /// message written for the user, which is shown in the bar below the
-  /// app bar rather than crashing or silently doing nothing.
+  /// Requests location and displays any failure without clearing the last position.
   Future<void> _findNearby() async {
     setState(() {
       _loadingLocation = true;
@@ -88,12 +78,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     );
   }
 
-  /// Applies the rating filter, then sorts by distance if we have a position.
-  ///
-  /// The filter runs against the live average computed from reviews, not
-  /// restaurant.rating. A restaurant with no reviews has no entry in
-  /// [ratings], and is treated as a 0.0 here so "Any" still shows it but any
-  /// higher minimum hides it, matching how the slider behaved before.
+  /// Unreviewed restaurants pass only the zero-minimum filter.
+  /// Sorts by distance when a position is available.
   List<Restaurant> _applyFilters(
     List<Restaurant> all,
     Map<String, ({double average, int count})> ratings,
@@ -114,10 +100,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     return matches;
   }
 
-  /// shortestSide is the width of the device in portrait, whichever way it
-  /// is currently held. That separates the two questions cleanly:
-  /// shortestSide answers "phone or tablet", orientation answers "is it
-  /// turned sideways".
+  /// Uses shortestSide to distinguish tablets independently of rotation.
   int _columnCount(Orientation orientation) {
     final double shortestSide = MediaQuery.of(context).size.shortestSide;
     final bool isTablet = shortestSide >= 600;

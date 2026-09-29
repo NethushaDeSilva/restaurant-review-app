@@ -8,14 +8,7 @@ import '../../utils/ratings.dart';
 import '../../shared_widgets/restaurant_image.dart';
 import '../my_reviews/add_review_screen.dart';
 
-/// The "detail" half of the master/detail pair.
-///
-/// The restaurant arrives through the constructor, handed straight in by
-/// Navigator.push. The reviews underneath are read live from Firebase.
-///
-/// Two layouts:
-///   portrait  - photo across the top, details scrolling underneath
-///   landscape - photo down the left, details scrolling on the right
+/// Displays a restaurant snapshot with live reviews.
 class RestaurantDetailScreen extends StatelessWidget {
   final Restaurant restaurant;
 
@@ -93,10 +86,7 @@ class RestaurantDetailScreen extends StatelessWidget {
     );
   }
 
-  /// The reviews section. [mine] is already filtered to this restaurant by
-  /// the StreamBuilder in build(), which also computes the rating header
-  /// above from the same list, so there is only one subscription to the
-  /// reviews stream for the whole screen.
+  /// [mine] contains only reviews for this restaurant.
   Widget _buildReviewSection(BuildContext context, List<Review> mine) {
     final TextTheme text = Theme.of(context).textTheme;
     final ColorScheme colours = Theme.of(context).colorScheme;
@@ -120,12 +110,7 @@ class RestaurantDetailScreen extends StatelessWidget {
     );
   }
 
-  /// The text half of the screen. Identical in both orientations, which is
-  /// why it lives in its own method rather than being written out twice.
-  ///
-  /// [stats] is the live average and review count for this restaurant,
-  /// computed by ratingsByRestaurant from the same review list as [mine].
-  /// It is null when nobody has reviewed this restaurant yet.
+  /// [stats] is null when this restaurant has no reviews.
   Widget _buildDetails(
     BuildContext context,
     bool isMyRestaurant,

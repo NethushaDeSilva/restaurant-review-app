@@ -1,11 +1,6 @@
 import '../models/review.dart';
 
-/// Groups reviews by restaurant and averages their ratings.
-///
-/// A restaurant with no reviews gets no entry in the returned map. Reporting
-/// "0.0" for an unreviewed restaurant would look like a real, poor score
-/// rather than the absence of one, so callers should treat a missing key as
-/// "not yet rated" rather than defaulting the average to zero themselves.
+/// Averages ratings to one decimal place; omits restaurants without reviews.
 Map<String, ({double average, int count})> ratingsByRestaurant(
   List<Review> reviews,
 ) {

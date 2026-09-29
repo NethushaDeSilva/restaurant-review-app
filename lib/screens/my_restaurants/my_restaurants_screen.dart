@@ -9,10 +9,7 @@ import '../../shared_widgets/restaurant_image.dart';
 import 'add_restaurant_screen.dart';
 import '../restaurants/restaurant_detail_screen.dart';
 
-/// The restaurants the signed-in user has added.
-///
-/// A user may add as many as they like, so a small chain or a place with
-/// several branches can list each one separately.
+/// Listings owned by the signed-in user.
 class MyRestaurantsScreen extends StatelessWidget {
   const MyRestaurantsScreen({super.key});
 

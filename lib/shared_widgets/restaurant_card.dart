@@ -3,15 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/restaurant.dart';
 import 'restaurant_image.dart';
 
-/// One restaurant shown as a wide Material card, image above the text.
-///
-/// Used by the single-column list layout (phone portrait) and the Home
-/// screen. [distanceKm] is only supplied once the user has asked for
-/// nearby restaurants and the GPS has returned a position.
-///
-/// The rating shown is [averageRating] and [reviewCount], computed live from
-/// the reviews stream by ratingsByRestaurant — never restaurant.rating,
-/// which is frozen at whatever value the listing was created with.
+/// List card using live review statistics, not the stored restaurant rating.
+/// [averageRating] must be supplied when [reviewCount] is positive.
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
   final VoidCallback onTap;
@@ -145,12 +138,8 @@ class RestaurantCard extends StatelessWidget {
   }
 }
 
-/// The same restaurant shown as a compact card for grid layouts.
-///
-/// The difference that matters: the image sits inside an Expanded, so it
-/// stretches to fill whatever height the grid cell has left after the text.
-/// The wide card above uses a fixed image height instead, because in a
-/// vertical list there is no cell height to fill.
+/// Grid card whose photo fills the remaining cell height.
+/// [averageRating] must be supplied when [reviewCount] is positive.
 class RestaurantGridCard extends StatelessWidget {
   final Restaurant restaurant;
   final VoidCallback onTap;
