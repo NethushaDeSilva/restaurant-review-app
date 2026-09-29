@@ -1,0 +1,14 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "explorer.compactFolders": false,
+    "files.exclude": {
+        "**/.dart_tool": true,
+        "**/build": true,
+        "**/coverage": true,
+        "**/.gradle": true,
+        "**/ephemeral": true,
+        "**/.idea": true,
+        "**/*.iml": true,
+        ".flutter-plugins-dependencies": true
+    }
+}
