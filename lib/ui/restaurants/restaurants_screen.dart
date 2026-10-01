@@ -9,7 +9,7 @@ import '../../utils/ratings.dart';
 import '../widgets/restaurant_card.dart';
 import 'restaurant_detail_screen.dart';
 
-/// Live restaurant list with rating filtering and optional distance sorting.
+/// Live restaurant list with name/rating filtering and optional distance sorting.
 class RestaurantsScreen extends StatefulWidget {
   const RestaurantsScreen({super.key});
 
@@ -20,6 +20,7 @@ class RestaurantsScreen extends StatefulWidget {
 class _RestaurantsScreenState extends State<RestaurantsScreen> {
   double _minRating = 0;
   bool _showFilter = false;
+  String _searchName = '';
 
   /// Null until the user taps the nearby button and the GPS responds.
   Position? _position;
@@ -86,7 +87,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
   ) {
     final List<Restaurant> matches = all.where((restaurant) {
       final double average = ratings[restaurant.id]?.average ?? 0;
-      return average >= _minRating;
+      return average >= _minRating &&
+          (_searchName.isEmpty || restaurant.name.toLowerCase() == _searchName);
     }).toList();
 
     if (_position != null) {
@@ -282,6 +284,20 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Restaurants'),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(72),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: TextField(
+              decoration: const InputDecoration(
+                labelText: 'Search by restaurant name',
+                hintText: 'Enter the full name',
+              ),
+              onChanged: (value) =>
+                  setState(() => _searchName = value.trim().toLowerCase()),
+            ),
+          ),
+        ),
         actions: [
           IconButton(
             icon: _loadingLocation
@@ -356,7 +372,9 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                         ? _buildMessage(
                             Icons.search_off,
                             'No restaurants match',
-                            'Lower the minimum rating to see more results.',
+                            _searchName.isEmpty
+                                ? 'Lower the minimum rating to see more results.'
+                                : 'Check the full name or lower the minimum rating.',
                           )
                         : _buildList(visible, ratings),
                   ),
