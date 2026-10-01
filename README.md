@@ -15,7 +15,7 @@ Firebase Realtime Database and device GPS.
 | [lib/utils/](lib/utils/) | Rating calculations and shared email validation |
 | [firebase/](firebase/) | Database rules and initial restaurant data |
 | [test/](test/) | Automated tests |
-| [docs/](docs/) | Test plan, viva notes and report files |
+| [docs/](docs/) | Test plan and report files |
 
 Start with [lib/main.dart](lib/main.dart) for app startup and the login gate.
 Use the [screen and function index](lib/README.md) during a demo.
