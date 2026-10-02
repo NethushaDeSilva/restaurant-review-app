@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 import '../../models/restaurant.dart';
 import '../../models/review.dart';
 import '../../services/database_service.dart';
-import '../../services/location_service.dart';
 import '../../utils/ratings.dart';
 import '../widgets/restaurant_card.dart';
 import 'restaurant_detail_screen.dart';
 
-/// Live restaurant list with name/rating filtering and optional distance sorting.
+/// Live restaurant list with name and rating filtering.
 class RestaurantsScreen extends StatefulWidget {
   const RestaurantsScreen({super.key});
 
@@ -22,11 +20,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
   bool _showFilter = false;
   String _searchName = '';
 
-  /// Null until the user taps the nearby button and the GPS responds.
-  Position? _position;
-  bool _loadingLocation = false;
-  String? _locationMessage;
-
   void _openDetail(Restaurant restaurant) {
     Navigator.push(
       context,
@@ -36,51 +29,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     );
   }
 
-  /// Requests location and displays any failure without clearing the last position.
-  Future<void> _findNearby() async {
-    setState(() {
-      _loadingLocation = true;
-      _locationMessage = null;
-    });
-
-    try {
-      final Position position = await LocationService.currentPosition();
-      if (mounted) {
-        setState(() {
-          _position = position;
-          _locationMessage = 'Sorted by distance from you';
-        });
-      }
-    } on LocationException catch (error) {
-      if (mounted) {
-        setState(() => _locationMessage = error.message);
-      }
-    } catch (error) {
-      if (mounted) {
-        setState(() => _locationMessage = 'Could not read your location.');
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _loadingLocation = false);
-      }
-    }
-  }
-
-  double? _distanceTo(Restaurant restaurant) {
-    final Position? position = _position;
-    if (position == null) {
-      return null;
-    }
-    return LocationService.distanceInKm(
-      position.latitude,
-      position.longitude,
-      restaurant.latitude,
-      restaurant.longitude,
-    );
-  }
-
   /// Unreviewed restaurants pass only the zero-minimum filter.
-  /// Sorts by distance when a position is available.
   List<Restaurant> _applyFilters(
     List<Restaurant> all,
     Map<String, ({double average, int count})> ratings,
@@ -90,14 +39,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
       return average >= _minRating &&
           (_searchName.isEmpty || restaurant.name.toLowerCase() == _searchName);
     }).toList();
-
-    if (_position != null) {
-      matches.sort((a, b) {
-        final double distanceA = _distanceTo(a) ?? 0;
-        final double distanceB = _distanceTo(b) ?? 0;
-        return distanceA.compareTo(distanceB);
-      });
-    }
 
     return matches;
   }
@@ -162,49 +103,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     );
   }
 
-  Widget _buildLocationBar() {
-    if (_locationMessage == null) {
-      return const SizedBox.shrink();
-    }
-
-    final TextTheme text = Theme.of(context).textTheme;
-    final ColorScheme colours = Theme.of(context).colorScheme;
-    final bool isSuccess = _position != null;
-
-    return Container(
-      width: double.infinity,
-      color: isSuccess ? colours.primaryContainer : colours.errorContainer,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Row(
-        children: [
-          Icon(
-            isSuccess ? Icons.near_me : Icons.location_off,
-            size: 18,
-            color: isSuccess
-                ? colours.onPrimaryContainer
-                : colours.onErrorContainer,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              _locationMessage!,
-              style: text.bodySmall?.copyWith(
-                color: isSuccess
-                    ? colours.onPrimaryContainer
-                    : colours.onErrorContainer,
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.close, size: 18),
-            visualDensity: VisualDensity.compact,
-            onPressed: () => setState(() => _locationMessage = null),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildMessage(IconData icon, String title, String detail) {
     final TextTheme text = Theme.of(context).textTheme;
     final ColorScheme colours = Theme.of(context).colorScheme;
@@ -248,7 +146,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                 restaurant: restaurant,
                 reviewCount: ratings[restaurant.id]?.count ?? 0,
                 averageRating: ratings[restaurant.id]?.average,
-                distanceKm: _distanceTo(restaurant),
                 onTap: () => _openDetail(restaurant),
               );
             },
@@ -270,7 +167,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
               restaurant: restaurant,
               reviewCount: ratings[restaurant.id]?.count ?? 0,
               averageRating: ratings[restaurant.id]?.average,
-              distanceKm: _distanceTo(restaurant),
               onTap: () => _openDetail(restaurant),
             );
           },
@@ -299,17 +195,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: _loadingLocation
-                ? const SizedBox(
-                    height: 18,
-                    width: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.near_me_outlined),
-            tooltip: 'Sort by distance from me',
-            onPressed: _loadingLocation ? null : _findNearby,
-          ),
           IconButton(
             icon: Icon(_showFilter ? Icons.filter_list_off : Icons.filter_list),
             tooltip: 'Filter by rating',
@@ -366,7 +251,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
               return Column(
                 children: [
                   _buildFilterPanel(all.length, visible.length),
-                  _buildLocationBar(),
                   Expanded(
                     child: visible.isEmpty
                         ? _buildMessage(

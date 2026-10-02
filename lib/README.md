@@ -11,7 +11,7 @@ screen; Firebase and GPS calls live in `services/`.
 | Homepage | [ui/home/home_screen.dart](ui/home/home_screen.dart) |
 | Login | [ui/auth/login_screen.dart](ui/auth/login_screen.dart) |
 | Registration | [ui/auth/register_screen.dart](ui/auth/register_screen.dart) |
-| Restaurant list, rating filter and nearby button | [ui/restaurants/restaurants_screen.dart](ui/restaurants/restaurants_screen.dart) |
+| Restaurant list, name search and rating filter | [ui/restaurants/restaurants_screen.dart](ui/restaurants/restaurants_screen.dart) |
 | Restaurant details and customer reviews | [ui/restaurants/restaurant_detail_screen.dart](ui/restaurants/restaurant_detail_screen.dart) |
 | My Reviews | [ui/my_reviews/my_reviews_screen.dart](ui/my_reviews/my_reviews_screen.dart) |
 | Write or edit a review | [ui/my_reviews/add_review_screen.dart](ui/my_reviews/add_review_screen.dart) |
