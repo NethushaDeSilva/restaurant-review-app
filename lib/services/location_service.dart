@@ -11,7 +11,7 @@ class LocationException implements Exception {
   String toString() => message;
 }
 
-/// Device location and straight-line distances.
+/// Device location for restaurant location tagging.
 class LocationService {
   /// Use Android LocationManager to avoid the fused-provider caching issue.
   /// A timed-out request may still fall back to a cached position.
@@ -26,8 +26,8 @@ class LocationService {
     final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       throw LocationException(
-        'Location is switched off on this device. Turn it on to see how far '
-        'away each restaurant is.',
+        'Location is switched off on this device. Turn it on to set the '
+        'restaurant location.',
       );
     }
 
@@ -36,7 +36,7 @@ class LocationService {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         throw LocationException(
-          'Location permission was denied. Distances will not be shown.',
+          'Location permission was denied. Restaurant location was not captured.',
         );
       }
     }
@@ -44,7 +44,7 @@ class LocationService {
     if (permission == LocationPermission.deniedForever) {
       throw LocationException(
         'Location permission is permanently denied. Allow it in Android '
-        'Settings to see distances.',
+        'Settings to set the restaurant location.',
       );
     }
 
@@ -60,21 +60,5 @@ class LocationService {
         'Could not get a location fix. Make sure GPS is on and try again.',
       );
     }
-  }
-
-  /// Straight-line distance in kilometres between two points.
-  static double distanceInKm(
-    double startLatitude,
-    double startLongitude,
-    double endLatitude,
-    double endLongitude,
-  ) {
-    final double metres = Geolocator.distanceBetween(
-      startLatitude,
-      startLongitude,
-      endLatitude,
-      endLongitude,
-    );
-    return metres / 1000;
   }
 }

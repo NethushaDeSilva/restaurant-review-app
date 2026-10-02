@@ -9,7 +9,6 @@ class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
   final VoidCallback onTap;
   final int reviewCount;
-  final double? distanceKm;
   final double? averageRating;
 
   const RestaurantCard({
@@ -17,7 +16,6 @@ class RestaurantCard extends StatelessWidget {
     required this.restaurant,
     required this.onTap,
     required this.reviewCount,
-    this.distanceKm,
     this.averageRating,
   });
 
@@ -34,46 +32,10 @@ class RestaurantCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                RestaurantImage(
-                  imageUrl: restaurant.imageUrl,
-                  height: 160,
-                  heroTag: restaurant.id,
-                ),
-                if (distanceKm != null)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colours.primary,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.near_me,
-                            size: 13,
-                            color: colours.onPrimary,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${distanceKm!.toStringAsFixed(1)} km',
-                            style: text.labelSmall?.copyWith(
-                              color: colours.onPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
+            RestaurantImage(
+              imageUrl: restaurant.imageUrl,
+              height: 160,
+              heroTag: restaurant.id,
             ),
             Padding(
               padding: const EdgeInsets.all(12),
@@ -144,7 +106,6 @@ class RestaurantGridCard extends StatelessWidget {
   final Restaurant restaurant;
   final VoidCallback onTap;
   final int reviewCount;
-  final double? distanceKm;
   final double? averageRating;
 
   const RestaurantGridCard({
@@ -152,7 +113,6 @@ class RestaurantGridCard extends StatelessWidget {
     required this.restaurant,
     required this.onTap,
     required this.reviewCount,
-    this.distanceKm,
     this.averageRating,
   });
 
@@ -170,36 +130,11 @@ class RestaurantGridCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: RestaurantImage(
-                      imageUrl: restaurant.imageUrl,
-                      heroTag: restaurant.id,
-                    ),
-                  ),
-                  if (distanceKm != null)
-                    Positioned(
-                      top: 6,
-                      right: 6,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: colours.primary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          '${distanceKm!.toStringAsFixed(1)} km',
-                          style: text.labelSmall?.copyWith(
-                            color: colours.onPrimary,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
+              child: SizedBox.expand(
+                child: RestaurantImage(
+                  imageUrl: restaurant.imageUrl,
+                  heroTag: restaurant.id,
+                ),
               ),
             ),
             Padding(

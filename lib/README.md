@@ -30,7 +30,7 @@ screen; Firebase and GPS calls live in `services/`.
 | Save or delete records | [services/database_service.dart](services/database_service.dart): `addReview`, `updateReview`, `deleteReview`, `addRestaurant`, `updateRestaurant`, `deleteRestaurant` |
 | Review form validation and save button | [ui/my_reviews/add_review_screen.dart](ui/my_reviews/add_review_screen.dart): `_validateComment`, `_save` |
 | Restaurant form validation and save button | [ui/my_restaurants/add_restaurant_screen.dart](ui/my_restaurants/add_restaurant_screen.dart): `_save` and field validators |
-| Location permissions and GPS | [services/location_service.dart](services/location_service.dart): `currentPosition`, `distanceInKm` |
+| Location permissions and GPS | [services/location_service.dart](services/location_service.dart): `currentPosition` |
 | Rating averages and counts | [utils/ratings.dart](utils/ratings.dart): `ratingsByRestaurant` |
 | Shared email validation | [utils/form_validators.dart](utils/form_validators.dart): `validateEmail` |
 | Restaurant fields and ownership helper | [models/restaurant.dart](models/restaurant.dart): `Restaurant`, `isOwnedBy` |
