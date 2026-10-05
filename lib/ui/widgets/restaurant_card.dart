@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../../models/restaurant.dart';
 import 'restaurant_image.dart';
 
-/// List card using live review statistics, not the stored restaurant rating.
-/// [averageRating] must be supplied when [reviewCount] is positive.
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
   final VoidCallback onTap;
@@ -100,8 +98,6 @@ class RestaurantCard extends StatelessWidget {
   }
 }
 
-/// Grid card whose photo fills the remaining cell height.
-/// [averageRating] must be supplied when [reviewCount] is positive.
 class RestaurantGridCard extends StatelessWidget {
   final Restaurant restaurant;
   final VoidCallback onTap;

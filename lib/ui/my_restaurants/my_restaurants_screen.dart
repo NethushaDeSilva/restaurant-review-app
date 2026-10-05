@@ -9,7 +9,6 @@ import '../widgets/restaurant_image.dart';
 import 'add_restaurant_screen.dart';
 import '../restaurants/restaurant_detail_screen.dart';
 
-/// Listings owned by the signed-in user.
 class MyRestaurantsScreen extends StatelessWidget {
   const MyRestaurantsScreen({super.key});
 
@@ -156,7 +155,6 @@ class MyRestaurantsScreen extends StatelessWidget {
             );
           }
 
-          // Display ratings calculated from reviews, not restaurant.rating.
           return StreamBuilder<List<Review>>(
             stream: DatabaseService.reviewsStream(),
             builder: (context, reviewSnapshot) {

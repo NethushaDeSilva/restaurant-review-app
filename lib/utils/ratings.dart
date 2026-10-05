@@ -1,6 +1,5 @@
 import '../models/review.dart';
 
-/// Averages ratings to one decimal place; omits restaurants without reviews.
 Map<String, ({double average, int count})> ratingsByRestaurant(
   List<Review> reviews,
 ) {

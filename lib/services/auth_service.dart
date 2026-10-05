@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// Email/password authentication and user-facing error messages.
 class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Authentication state observed by AuthGate.
   static Stream<User?> authChanges() {
     return _auth.authStateChanges();
   }
@@ -30,7 +28,6 @@ class AuthService {
     await _auth.signOut();
   }
 
-  /// Maps authentication failures to user-facing messages.
   static String messageFor(FirebaseAuthException error) {
     switch (error.code) {
       case 'invalid-email':

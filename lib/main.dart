@@ -32,7 +32,6 @@ class RestaurantReviewApp extends StatelessWidget {
   }
 }
 
-/// Switches the root screen when the authentication state changes.
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 

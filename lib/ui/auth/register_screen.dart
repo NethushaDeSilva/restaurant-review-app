@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../utils/form_validators.dart';
 
-/// Create-account screen, opened from the link on the login screen.
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -49,7 +48,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _emailController.text.trim(),
         _passwordController.text,
       );
-      // Registration signs in automatically; close the registration route.
       if (mounted) {
         Navigator.pop(context);
       }

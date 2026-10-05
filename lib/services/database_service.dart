@@ -3,11 +3,9 @@ import 'package:firebase_database/firebase_database.dart';
 import '../models/restaurant.dart';
 import '../models/review.dart';
 
-/// Realtime collection reads and owner-scoped writes enforced by database rules.
 class DatabaseService {
   static final DatabaseReference _db = FirebaseDatabase.instance.ref();
 
-  /// Live list of every restaurant, sorted by name.
   static Stream<List<Restaurant>> restaurantsStream() {
     return _db.child('restaurants').onValue.map((DatabaseEvent event) {
       final Object? data = event.snapshot.value;
@@ -28,7 +26,6 @@ class DatabaseService {
     });
   }
 
-  /// Live list of every review in the database.
   static Stream<List<Review>> reviewsStream() {
     return _db.child('reviews').onValue.map((DatabaseEvent event) {
       final Object? data = event.snapshot.value;
@@ -71,7 +68,6 @@ class DatabaseService {
         .update(restaurant.toMap());
   }
 
-  /// Deletes the listing but retains reviews; only their authors may delete them.
   static Future<void> deleteRestaurant(String restaurantId) async {
     await _db.child('restaurants').child(restaurantId).remove();
   }

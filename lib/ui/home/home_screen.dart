@@ -7,7 +7,6 @@ import '../../utils/ratings.dart';
 import '../widgets/restaurant_card.dart';
 import '../restaurants/restaurant_detail_screen.dart';
 
-/// Up to four restaurants ranked by live review averages.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -78,7 +77,6 @@ class HomeScreen extends StatelessWidget {
             );
           }
 
-          // Display ratings calculated from reviews, not restaurant.rating.
           return StreamBuilder<List<Review>>(
             stream: DatabaseService.reviewsStream(),
             builder: (context, reviewSnapshot) {
@@ -103,7 +101,6 @@ class HomeScreen extends StatelessWidget {
               final Map<String, ({double average, int count})> ratings =
                   ratingsByRestaurant(reviewSnapshot.data ?? []);
 
-              // Unreviewed restaurants sort after rated restaurants.
               final List<Restaurant> sorted = List.from(all);
               sorted.sort((a, b) {
                 final ({double average, int count})? ratingA = ratings[a.id];

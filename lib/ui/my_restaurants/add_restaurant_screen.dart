@@ -6,7 +6,6 @@ import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 import '../../services/location_service.dart';
 
-/// Creates a listing or edits [existingRestaurant]. Owners cannot set ratings.
 class AddRestaurantScreen extends StatefulWidget {
   final Restaurant? existingRestaurant;
 
@@ -80,7 +79,6 @@ class _AddRestaurantScreenState extends State<AddRestaurantScreen> {
     super.dispose();
   }
 
-  /// Captures coordinates from the device at the restaurant.
   Future<void> _useCurrentLocation() async {
     setState(() {
       _loadingLocation = true;
@@ -134,13 +132,11 @@ class _AddRestaurantScreenState extends State<AddRestaurantScreen> {
       final String ownerId = AuthService.currentUser?.uid ?? '';
 
       final Restaurant restaurant = Restaurant(
-        // Firebase generates the id when creating a record.
         id: widget.existingRestaurant?.id ?? '',
         ownerId: ownerId,
         name: _nameController.text.trim(),
         cuisine: _cuisine,
         area: _areaController.text.trim(),
-        // Ratings come from customer reviews, never from the owner.
         rating: widget.existingRestaurant?.rating ?? 0,
         priceRange: _priceController.text.trim(),
         imageUrl: _imageController.text.trim(),

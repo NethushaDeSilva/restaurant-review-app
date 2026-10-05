@@ -5,7 +5,6 @@ import '../../models/review.dart';
 import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 
-/// Creates a review or updates [existingReview].
 class AddReviewScreen extends StatefulWidget {
   final Restaurant restaurant;
   final Review? existingReview;
@@ -59,7 +58,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     super.dispose();
   }
 
-  /// Database date format: day, English month abbreviation, year.
   String _formatDate(DateTime date) {
     const List<String> months = [
       'Jan',
@@ -108,7 +106,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           AuthService.currentUser?.displayName ?? 'Anonymous';
 
       final Review review = Review(
-        // Firebase generates the id when creating a record.
         id: widget.existingReview?.id ?? '',
         restaurantId: widget.restaurant.id,
         userId: userId,

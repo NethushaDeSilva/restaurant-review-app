@@ -8,7 +8,6 @@ import '../../utils/ratings.dart';
 import '../widgets/restaurant_image.dart';
 import '../my_reviews/add_review_screen.dart';
 
-/// Displays a restaurant snapshot with live reviews.
 class RestaurantDetailScreen extends StatelessWidget {
   final Restaurant restaurant;
 
@@ -86,7 +85,6 @@ class RestaurantDetailScreen extends StatelessWidget {
     );
   }
 
-  /// [mine] contains only reviews for this restaurant.
   Widget _buildReviewSection(BuildContext context, List<Review> mine) {
     final TextTheme text = Theme.of(context).textTheme;
     final ColorScheme colours = Theme.of(context).colorScheme;
@@ -110,7 +108,6 @@ class RestaurantDetailScreen extends StatelessWidget {
     );
   }
 
-  /// [stats] is null when this restaurant has no reviews.
   Widget _buildDetails(
     BuildContext context,
     bool isMyRestaurant,
@@ -242,7 +239,6 @@ class RestaurantDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Hide the review action for the listing owner.
     final String myId = AuthService.currentUser?.uid ?? '';
     final bool isMyRestaurant = restaurant.isOwnedBy(myId);
 
@@ -285,7 +281,6 @@ class RestaurantDetailScreen extends StatelessWidget {
           return OrientationBuilder(
             builder: (context, orientation) {
               if (orientation == Orientation.landscape) {
-                // Keep the photo beside the text on short landscape screens.
                 return Row(
                   children: [
                     Expanded(

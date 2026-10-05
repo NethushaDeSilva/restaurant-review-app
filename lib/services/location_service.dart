@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
 
-/// Location failure with a message suitable for display.
 class LocationException implements Exception {
   final String message;
   LocationException(this.message);
@@ -11,17 +10,13 @@ class LocationException implements Exception {
   String toString() => message;
 }
 
-/// Device location for restaurant location tagging.
 class LocationService {
-  /// Use Android LocationManager to avoid the fused-provider caching issue.
-  /// A timed-out request may still fall back to a cached position.
   static final LocationSettings _settings = AndroidSettings(
     accuracy: LocationAccuracy.high,
     forceLocationManager: true,
     timeLimit: Duration(seconds: 15),
   );
 
-  /// Requires enabled location services and permission before requesting GPS.
   static Future<Position> currentPosition() async {
     final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -51,7 +46,6 @@ class LocationService {
     try {
       return await Geolocator.getCurrentPosition(locationSettings: _settings);
     } on TimeoutException {
-      // Use the last known position if the fresh GPS request times out.
       final Position? lastKnown = await Geolocator.getLastKnownPosition();
       if (lastKnown != null) {
         return lastKnown;

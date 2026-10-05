@@ -7,7 +7,6 @@ import '../../utils/ratings.dart';
 import '../widgets/restaurant_card.dart';
 import 'restaurant_detail_screen.dart';
 
-/// Live restaurant list with name and rating filtering.
 class RestaurantsScreen extends StatefulWidget {
   const RestaurantsScreen({super.key});
 
@@ -29,7 +28,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     );
   }
 
-  /// Unreviewed restaurants pass only the zero-minimum filter.
   List<Restaurant> _applyFilters(
     List<Restaurant> all,
     Map<String, ({double average, int count})> ratings,
@@ -43,7 +41,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     return matches;
   }
 
-  /// Uses shortestSide to distinguish tablets independently of rotation.
   int _columnCount(Orientation orientation) {
     final double shortestSide = MediaQuery.of(context).size.shortestSide;
     final bool isTablet = shortestSide >= 600;
@@ -228,7 +225,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
             );
           }
 
-          // Filter and display using live review averages.
           return StreamBuilder<List<Review>>(
             stream: DatabaseService.reviewsStream(),
             builder: (context, reviewSnapshot) {

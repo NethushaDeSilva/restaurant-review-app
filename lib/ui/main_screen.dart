@@ -5,7 +5,6 @@ import 'my_reviews/my_reviews_screen.dart';
 import 'profile/profile_screen.dart';
 import 'restaurants/restaurants_screen.dart';
 
-/// Four-tab shell with a navigation rail on tablets.
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -16,7 +15,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  /// Screen, label and icon lists share the same destination indexes.
   static const List<Widget> _screens = [
     HomeScreen(),
     RestaurantsScreen(),
@@ -53,7 +51,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Use shortestSide so rotating a phone does not select the tablet layout.
     final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     if (isTablet) {

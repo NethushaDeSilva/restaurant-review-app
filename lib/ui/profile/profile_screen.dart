@@ -6,7 +6,6 @@ import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 import '../my_restaurants/my_restaurants_screen.dart';
 
-/// The signed-in user's own page, with the sign-out button.
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -203,7 +202,6 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-/// Small reusable tile showing one number about the user.
 class _StatCard extends StatelessWidget {
   final String label;
   final String value;

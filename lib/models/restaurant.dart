@@ -1,4 +1,3 @@
-/// Restaurant listing. Imported listings have no owner.
 class Restaurant {
   final String id;
   final String ownerId;
@@ -28,13 +27,10 @@ class Restaurant {
     required this.longitude,
   });
 
-  /// Whether this listing has an owner.
   bool get isUserAdded => ownerId.isNotEmpty;
 
-  /// True if the given user added this restaurant.
   bool isOwnedBy(String userId) => ownerId.isNotEmpty && ownerId == userId;
 
-  /// Parses a database record, defaulting missing fields and invalid numbers.
   factory Restaurant.fromMap(String id, Map<dynamic, dynamic> map) {
     return Restaurant(
       id: id,
@@ -52,7 +48,6 @@ class Restaurant {
     );
   }
 
-  /// Converts back to a Map so it can be written to Firebase.
   Map<String, dynamic> toMap() {
     return {
       'ownerId': ownerId,

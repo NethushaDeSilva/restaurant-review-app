@@ -6,7 +6,6 @@ import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 import 'add_review_screen.dart';
 
-/// Editable reviews by the signed-in user for existing restaurants.
 class MyReviewsScreen extends StatelessWidget {
   const MyReviewsScreen({super.key});
 
@@ -132,7 +131,6 @@ class MyReviewsScreen extends StatelessWidget {
                 );
               }
 
-              // Hide reviews whose restaurant has been deleted.
               final List<Review> all = reviewSnapshot.data ?? [];
               final List<Review> mine = all
                   .where(

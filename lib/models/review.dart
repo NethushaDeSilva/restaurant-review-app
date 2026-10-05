@@ -1,4 +1,3 @@
-/// Restaurant review owned by [userId].
 class Review {
   final String id;
   final String restaurantId;

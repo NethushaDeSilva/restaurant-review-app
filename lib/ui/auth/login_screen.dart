@@ -5,7 +5,6 @@ import '../../services/auth_service.dart';
 import '../../utils/form_validators.dart';
 import 'register_screen.dart';
 
-/// Sign-in screen. The link at the bottom opens the register screen.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -45,7 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailController.text.trim(),
         _passwordController.text,
       );
-      // AuthGate handles navigation after sign-in.
     } on FirebaseAuthException catch (error) {
       if (mounted) {
         setState(() => _errorMessage = AuthService.messageFor(error));

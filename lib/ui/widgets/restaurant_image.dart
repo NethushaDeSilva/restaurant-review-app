@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Network photo with loading and error placeholders.
-/// [heroTag] enables the shared-image route transition.
 class RestaurantImage extends StatelessWidget {
   final String imageUrl;
   final double? height;

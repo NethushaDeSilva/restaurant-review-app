@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Shared seed for the light and dark Material themes.
 const Color kSeedColour = Color(0xFFBF360C); // deep orange
 
 final ThemeData lightTheme = ThemeData(
