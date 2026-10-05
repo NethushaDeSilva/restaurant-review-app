@@ -35,7 +35,7 @@ configured for Android only. Keep platform folders in their standard locations.
 
 ## Run and check
 
-See [SETUP.md](SETUP.md) for backend setup. With Android connected:
+With an Android device or emulator connected:
 
 ```sh
 flutter run
